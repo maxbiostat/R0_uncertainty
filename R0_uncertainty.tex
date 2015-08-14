@@ -1,0 +1,105 @@
+\documentclass[a4paper, notitlepage, 10pt]{article}
+\usepackage{geometry}
+% WSC 2015 configs
+\fontfamily{times}
+\geometry{verbose,tmargin=30mm,bmargin=25mm,lmargin=25mm,rmargin=25mm}
+\pagestyle{empty}
+% end configs
+\usepackage{setspace,relsize}               
+\usepackage{moreverb}                        
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,citecolor=blue}
+\usepackage{amsmath}
+\usepackage{mathtools} 
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage{todonotes}
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{apalike}
+\usepackage[pdftex]{lscape}
+\usepackage[utf8]{inputenc}
+
+% Title Page
+\title{\vspace{-9ex}\centering \bf Some remarks on the uncertainty analysis of $R_0$ in the SIR model}
+\author{
+Luiz Max F. de Carvalho$^{1,2,3}$, Daniel A. M. Villela$^1$, Flavio Coelho$^3$ \& Leonardo S. Bastos$^1$ \\
+a -- Program for Scientific Computing (PROCC), Oswaldo Cruz Foundation. \\
+b -- Institute of Evolutionary Biology, University of Edinburgh.\\
+c -- School of Applied Mathematics, Getulio Vargas Foundation (FGV).
+}
+\date{}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newtheorem{theo}{Theorem}[]
+\newtheorem{proposition}{Proposition}[]
+\newtheorem{remark}{Remark}[]
+\setcounter{theo}{0} % assign desired value to theorem counter
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+Key-words: Basic reproductive number; uncertainty; logarithmic pooling; Gamma ratio distribution; . 
+\end{abstract}
+
+\section{Background}
+
+$R_0$ is important, a key quantity in epidemic modelling.
+
+Acknowledging uncertainty on parameter values is important.
+
+logarithmic pooling is a nice and robust way of combining multiple sources of info.
+\cite{poole2000} discuss the issue of propagating uncertainty through a deterministic model.
+
+
+This begs the question, however, of in which order the pooling and propagation (inducing) operations should be performed.
+
+
+\section{Preliminaries}
+SIR model
+
+uncertainty analysis
+
+logarithmic pooling 
+
+
+\section{Induce-then-pool or pool-then-induce?}
+uncertainty about parameters can be represented by Gamma distributions.
+
+Gamma ratio distribution.
+
+Pooling Gammas gives Gamma
+
+Pooling Gamma ratios gives Loch Ness monster
+
+Compare the two (tails, concavity, etc).
+
+
+
+
+\section{Application: $R_0$ for Ebola in West Africa}
+[SCAN THE LITERATURE FOR BAYESIAN ESTIMATES]
+\section*{Acknowledgements}
+\bibliography{R0}
+
+% \begin{figure}[!ht]
+% \centering
+% \includegraphics[width=\textwidth, height = 15cm]{figures/}
+% \caption{\textbf{}.
+% }
+% \label{fig:}
+% \end{figure}
+%%
+% \begin{figure}
+% \hfill
+% \subfigure[Title A]{\includegraphics[width=5cm]{img1}}
+% \hfill
+% \subfigure[Title B]{\includegraphics[width=5cm]{img2}}
+% \hfill
+% \caption{\textbf{}.
+% }
+% \label{fig:}
+% \end{figure}
+\end{document}          
