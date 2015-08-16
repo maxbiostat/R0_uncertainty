@@ -1,6 +1,6 @@
 source("elicit_gamma.R")
 source("gamma_ratio.R")
-source("../maxent_aux.R")
+source("../../CODE/maxent_aux.R")
 # Four distributions
 # N's
 N0 <- 1000
@@ -53,7 +53,9 @@ Ds <- list(
 # Plotting
 ###############
 curve(dgamma.ratio(x, t1 = t1Nstar, t2 = t2star, k1 = k1star, k2 = k2star, N = 1 ),
-      0, 10, main = "Pooled distributions", xlab = expression(R[0]),
+      0, 15, main = "Pooled distributions", xlab = expression(R[0]),
       ylab = "Density", lwd = 2)
-curve(dpoolnorm.positive(x, D = Ds, alpha = alphas), 0, 10, lwd = 2,
+curve(dpoolnorm.positive(x, D = Ds, alpha = alphas), 0, 15, lwd = 2,
       lty = 2, add = TRUE, col = 2)
+legend(x = "topright", bty = "n", legend = c("Pool-then-induce", "Induce-then-pool"),
+       col = 1:2, lty = 1:2, lwd = 2)
