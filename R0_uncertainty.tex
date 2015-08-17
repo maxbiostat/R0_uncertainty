@@ -57,18 +57,87 @@ logarithmic pooling is a nice and robust way of combining multiple sources of in
 This begs the question, however, of in which order the pooling and propagation (inducing) operations should be performed.
 
 
-\section{Preliminaries}
-SIR model
+\subsection{SIR model}
 
-uncertainty analysis
+\begin{eqnarray*}
+\frac{dS}{dt}&=& - \beta SI\\
+\frac{dI}{dt}&=&  \beta SI - \gamma I\\
+\frac{dR}{dt}&=& \gamma I 
+\end{eqnarray*} 
+where  $S(t) + I(t) + R(t) = N \quad \forall t$, $\beta$ is the transmission (infection) rate and $\gamma$ is the recovery rate.
 
-logarithmic pooling 
+\begin{equation}
+\label{eq:r0def}
+R_0 = \frac{\beta N}{\gamma}. 
+\end{equation}
+
+\subsection{Uncertainty analysis}
+
+$p(\beta, \gamma)$
+$M(\cdot)$
+$M(p(\beta, \gamma)) = p(R_0)$
+$p(\beta, \gamma) = p(\beta)p(\gamma)$
+
+uncertainty about parameters can be represented by Gamma distributions.
+\begin{eqnarray*}
+f_{\beta}(b) &=& \frac{1}{\Gamma(k_1)\theta_1^{k_1}} b^{k_1} exp (- \frac{b}{\theta_1} ) \\
+f_{\gamma}(g) &=& \frac{1}{\Gamma(k_2)\theta_2^{k_2}} g^{k_2} exp (- \frac{g}{\theta_2})
+\end{eqnarray*}
+
+\subsection{Logarithmic pooling} 
 
 
 \section{Induce-then-pool or pool-then-induce?}
-uncertainty about parameters can be represented by Gamma distributions.
 
-Gamma ratio distribution.
+
+\subsection{The Gamma ratio distribution}
+
+To derive the distribution, we begin by noting that for $N > 1$, the distribution of $\beta^{\ast} = \beta N$ is a Gamma distribution with parameters $k_1$ and $N\theta_1$.
+Thus
+\begin{eqnarray}
+f_{R_0}(r) &=& A \int_{0}^{\infty} \gamma(\gamma r)^{k_1 -1} e^{-\frac{\gamma r}{N\theta_1}} \gamma^{k_2 -1} e^{-\frac{\gamma}{\theta_2}} d\gamma \\
+A &=& \frac{1}{\Gamma(k_1)(N\theta_1)^{k_1}\Gamma(k_2)\theta_2^{k_2}}
+\end{eqnarray}
+Rearranging, yields
+\begin{eqnarray}
+\label{eq:toint}
+f_{R_0}(r) &=& A \int_{0}^{\infty} r^{k_1 -1} \gamma^{k_1 + k_2 -1} e^{-B\gamma} d\gamma \\
+        B  &=& \frac{\theta_2 r + N\theta_1}{N\theta_1\theta_2}
+\end{eqnarray}
+
+
+\begin{eqnarray}
+\label{eq:density}
+f_{R_0}(r) &=& \phi\space r^{k_1-1} (\theta_2 r + N\theta_1)^{-(k_1 + k_2)} \\
+\label{eq:normconst}
+\phi &=&  \frac{(N\theta_1\theta_2)^{k1+k2}}{\mathcal{B}(k_1, k_2)(N\theta_1)^{k_1}\theta_2^{k_2} }
+\end{eqnarray}
+where $\mathcal{B}$ is the Beta function ($\mathcal{B}(a, b) = \frac{\Gamma(a + b)}{\Gamma(a)\Gamma(b)}$) and $\phi$ is the normalisation constant.
+
+\begin{equation}
+\label{eq:prR01}
+Pr(R_0 < 1) = \int_{0}^{1} f_{R_0}(r)dr 
+\end{equation}
+
+\begin{align}
+\label{eq:expR0}
+E(R_0) &= \int_{0}^{\infty}rf_{R0}(r)dr \\
+       &= \frac{N\theta_1}{\theta_2}\frac{k_1}{(k_2-1)}
+\end{align}
+
+\begin{eqnarray}
+\label{eq:var1}
+Var(R_0) &=& E(R_0^2) - E(R_0)^2  \\
+\label{eq:var2}
+ &=& \left(\frac{N\theta_1}{\theta_2}\right)^2\frac{(k_1+k_2-1)k_1}{(k_2-2)(k_2-1)^2}
+\end{eqnarray}
+which only exists for $k_2 > 2$.
+
+The mode is 
+\begin{equation}
+\label{eq:mode}
+\frac{N\theta_1}{\theta_2}\frac{k_1 - 1}{(k_2 + 1)}
+\end{equation}
 
 Pooling Gammas gives Gamma
 
