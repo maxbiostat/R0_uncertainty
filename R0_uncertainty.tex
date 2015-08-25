@@ -74,9 +74,12 @@ R_0 = \frac{\beta N}{\gamma}.
 \subsection{Uncertainty analysis}
 
 $p(\beta, \gamma)$
+
 $M(\cdot)$
+
 $M(p(\beta, \gamma)) = p(R_0)$
-$p(\beta, \gamma) = p(\beta)p(\gamma)$
+
+For simplicity we will assume that $p(\beta, \gamma) = p(\beta)p(\gamma)$.
 
 uncertainty about parameters can be represented by Gamma distributions.
 \begin{eqnarray*}
@@ -93,8 +96,10 @@ f_{\gamma}(g) &=& \frac{1}{\Gamma(k_2)\theta_2^{k_2}} g^{k_2} exp (- \frac{g}{\t
 \subsection{The Gamma ratio distribution}
 
 To derive the distribution, we begin by noting that for $N > 1$, the distribution of $\beta^{\ast} = \beta N$ is a Gamma distribution with parameters $k_1$ and $N\theta_1$.
-Thus
+Under the assumption of independence $p(\beta^{\ast}, \gamma) = p(\beta^{\ast})p(\gamma)$, thus
 \begin{eqnarray}
+% R_0 &=& \frac{\beta^{\ast}}{\gamma}\\
+R_0 &=& \beta^{\ast}/\gamma\\
 f_{R_0}(r) &=& A \int_{0}^{\infty} \gamma(\gamma r)^{k_1 -1} e^{-\frac{\gamma r}{N\theta_1}} \gamma^{k_2 -1} e^{-\frac{\gamma}{\theta_2}} d\gamma \\
 A &=& \frac{1}{\Gamma(k_1)(N\theta_1)^{k_1}\Gamma(k_2)\theta_2^{k_2}}
 \end{eqnarray}
@@ -105,26 +110,22 @@ f_{R_0}(r) &=& A \int_{0}^{\infty} r^{k_1 -1} \gamma^{k_1 + k_2 -1} e^{-B\gamma}
         B  &=& \frac{\theta_2 r + N\theta_1}{N\theta_1\theta_2}
 \end{eqnarray}
 
-
 \begin{eqnarray}
 \label{eq:density}
-f_{R_0}(r) &=& \phi\space r^{k_1-1} (\theta_2 r + N\theta_1)^{-(k_1 + k_2)} \\
+f_{R_0}(r) &=& \phi\times\space r^{k_1-1} (\theta_2 r + N\theta_1)^{-(k_1 + k_2)} \\
+% f_{R_0}(r) &=& \phi\frac{r^{k_1-1}}{(\theta_2 r + N\theta_1)^{(k_1 + k_2)}}\\
 \label{eq:normconst}
 \phi &=&  \frac{(N\theta_1\theta_2)^{k1+k2}}{\mathcal{B}(k_1, k_2)(N\theta_1)^{k_1}\theta_2^{k_2} }
 \end{eqnarray}
-where $\mathcal{B}$ is the Beta function ($\mathcal{B}(a, b) = \frac{\Gamma(a + b)}{\Gamma(a)\Gamma(b)}$) and $\phi$ is the normalisation constant.
-
-\begin{equation}
-\label{eq:prR01}
-Pr(R_0 < 1) = \int_{0}^{1} f_{R_0}(r)dr 
-\end{equation}
-
+where $\mathcal{B}(a, b) = \Gamma(a + b)/\Gamma(a)\Gamma(b)$ is the Beta function  and $\phi$ is the normalisation constant.
+The probability distribution in~(\ref{eq:density}) will be called Gamma ratio distribution henceforth.
+The expectation of the Gamma ratio distribution is then
 \begin{align}
 \label{eq:expR0}
 E(R_0) &= \int_{0}^{\infty}rf_{R0}(r)dr \\
        &= \frac{N\theta_1}{\theta_2}\frac{k_1}{(k_2-1)}
 \end{align}
-
+and its variance can be computed as
 \begin{eqnarray}
 \label{eq:var1}
 Var(R_0) &=& E(R_0^2) - E(R_0)^2  \\
