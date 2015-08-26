@@ -10,9 +10,10 @@ opt.quantile.gamma <- function(b, Mean, CI, alpha){ # minimizing the sum of abso
   dev.upr <- abs(CI[2]-t.CI[2])
   return(dev.lwr + dev.upr)
 }
+gini.gama <- function(a) gamma((2*a + 1)/2)/(a*gamma(a)*sqrt(pi))
 opt.gini.gamma <- function(b, Mean, gini){ # minimizing the difference between calculated and target Gini indexes 
   astar <- Mean*b   
-  calc.gini <- gamma((2*astar + 1)/2)/(astar*gamma(astar)*sqrt(pi))
+  calc.gini <- gini.gamma(astar)
   return(abs(calc.gini-gini))
 }
 elicit.gamma <- function(Mean, CI, alpha, gini = NULL, M = 1E+7){
@@ -26,7 +27,7 @@ elicit.gamma <- function(Mean, CI, alpha, gini = NULL, M = 1E+7){
     b.opt <- optimise(opt.gini.gamma, interval = c(1E-3, 100), Mean = Mean, gini = gini)$minimum
   }else{
     b.opt <- optimise(opt.quantile.gamma, interval = c(1E-3, M), Mean = Mean, CI = CI, alpha = alpha)$minimum
-  }
+ } 
   parms <- c(a.opt = Mean*b.opt, b.opt = b.opt)
     return(parms)
 }
@@ -37,4 +38,4 @@ elicit.gamma <- function(Mean, CI, alpha, gini = NULL, M = 1E+7){
 # alpha.true <- .95
 # CI.true <- qgamma(c((1-alpha.true)/2, (1+alpha.true)/2), a.true, b.true)
 # elicit.gamma(Mean = a.true/b.true, CI = CI.true, alpha = alpha.true)
-# elicit.gamma(Mean = a.true/b.true, gini = .53) ## Brazil has a Gini index of 0.53 http://data.worldbank.org/indicator/SI.POV.GINI
+# elicit.gamma(Mean = 1, gini = .53) ## Brazil has a Gini index of 0.53 http://data.worldbank.org/indicator/SI.POV.GINI
