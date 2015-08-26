@@ -10,7 +10,7 @@ opt.quantile.gamma <- function(b, Mean, CI, alpha){ # minimizing the sum of abso
   dev.upr <- abs(CI[2]-t.CI[2])
   return(dev.lwr + dev.upr)
 }
-gini.gama <- function(a) gamma((2*a + 1)/2)/(a*gamma(a)*sqrt(pi))
+gini.gamma <- function(a) gamma((2*a + 1)/2)/(a*gamma(a)*sqrt(pi))
 opt.gini.gamma <- function(b, Mean, gini){ # minimizing the difference between calculated and target Gini indexes 
   astar <- Mean*b   
   calc.gini <- gini.gamma(astar)
