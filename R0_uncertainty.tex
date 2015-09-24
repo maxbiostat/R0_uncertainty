@@ -1,35 +1,60 @@
-\documentclass[a4paper, notitlepage, 10pt]{article}
-\usepackage{geometry}
-% WSC 2015 configs
-\fontfamily{times}
-\geometry{verbose,tmargin=30mm,bmargin=25mm,lmargin=25mm,rmargin=25mm}
-\pagestyle{empty}
-% end configs
+\documentclass[11pt]{article}
+\usepackage{calc}
+\usepackage{color}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage{placeins}
+\usepackage{hyperref}
+\usepackage[a4paper,top=5.5cm,bottom=4cm,left=2.5cm, right=2.5cm,foot=1cm]{geometry}
+\pagenumbering{gobble}
 \usepackage{setspace,relsize}               
 \usepackage{moreverb}                        
 \usepackage{url}
-\usepackage{hyperref}
 \hypersetup{colorlinks=true,citecolor=blue}
-\usepackage{amsmath}
 \usepackage{mathtools} 
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{indentfirst}
-\usepackage{todonotes}
-\usepackage[authoryear,round]{natbib}
-\bibliographystyle{apalike}
+% \usepackage{todonotes}
+\usepackage[numbers,square]{natbib}
+\bibliographystyle{plain}
 \usepackage[pdftex]{lscape}
-\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage[cp1250]{inputenc}
+\usepackage[OT4]{fontenc}
+
+\addtolength{\voffset}{-3.5cm} \addtolength{\textheight}{4cm}
+
+\renewcommand{\refname}{\large{\textbf{ Bibliography}}}
+\renewcommand\Authfont{\scshape\small}
+\renewcommand\Affilfont{\itshape\small}
+\newcommand{\keywords}[1]{\noindent{\large{\bf Keywords:}} #1\\}
+\setlength{\affilsep}{1em}
+\newcommand{\smalllineskip}{\baselineskip=15pt}
+\newcommand{\emailaddress}[1]{{\sf#1}}
+\newcommand{\speaker}[1]{\author{\underline{#1}}}
+\newcommand{\speakeraffil}[1]{\affil{#1}}
+\let\LaTeXtitle\title
+\renewcommand{\title}[1]{\LaTeXtitle{\Large{\textbf{#1}}}}
 
 % Title Page
-\title{\vspace{-9ex}\centering \bf Some remarks on the uncertainty analysis of $R_0$ in the SIR model}
-\author{
-Luiz Max F. de Carvalho$^{1,2,3}$, Daniel A. M. Villela$^1$, Flavio Coelho$^3$ \& Leonardo S. Bastos$^1$ \\
-a -- Program for Scientific Computing (PROCC), Oswaldo Cruz Foundation. \\
-b -- Institute of Evolutionary Biology, University of Edinburgh.\\
-c -- School of Applied Mathematics, Getulio Vargas Foundation (FGV).
-}
-\date{}
+\title{Some remarks on the uncertainty analysis of $R_0$ in the SIR model}
+
+\speaker{Luiz Max F. de Carvalho} % Write speaker name here
+
+\author[1]{Daniel A. M. Villela}
+\author[2]{Flavio Coelho}
+\author[1]{Leonardo S. Bastos}
+
+%%AFFILIATIONS
+\speakeraffil{Program for Scientific Computing (PROCC), Oswaldo Cruz Foundation, Brazil,\,\emailaddress{lmax.procc@gmail.com}} % Write affiliation/s of the speaker here.
+
+\affil[2]{School of Applied Mathematics, Getulio Vargas Foundation (FGV), Brazil,\,\emailaddress{fccoelho@fgv.br}} % Write affiliation/s of the first co-author here, if there is any. If not, remove the line.
+
+\date{\vspace{-6ex}} % Do not modify this line
+
+
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newtheorem{theo}{Theorem}[]
