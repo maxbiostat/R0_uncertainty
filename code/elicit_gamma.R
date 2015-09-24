@@ -3,7 +3,7 @@
 #   covstar <- pgamma(CI[2], astar, b) - pgamma(CI[1], astar, b) # obtained coverage
 #   return(abs(alpha - covstar))
 # } # DOESN'T WORK PROPERLY AS IS
-opt.quantile.gamma <- function(b, Mean, CI, alpha){ # minimizing the sum of absolute errors for CI bounds 
+opt.quantile.gamma <- function(b, Mean, CI, alpha = .95){ # minimizing the sum of absolute errors for CI bounds 
   astar <- Mean*b   
   t.CI <- qgamma(c((1-alpha)/2, (1+alpha)/2), astar, b) # tentative CI
   dev.lwr <- abs(CI[1]-t.CI[1])
@@ -16,7 +16,7 @@ opt.gini.gamma <- function(b, Mean, gini){ # minimizing the difference between c
   calc.gini <- gini.gamma(astar)
   return(abs(calc.gini-gini))
 }
-elicit.gamma <- function(Mean, CI, alpha, gini = NULL, M = 1E+7){
+elicit.gamma <- function(Mean, CI, alpha = .95, gini = NULL, M = 1E+7){
   ## Function to elicit parameters of a Gamma distribution using some prior information on mean, CI or Gini coefficient
   # mean is the expected value
   # interval is a vector with upper and lower bounds 
