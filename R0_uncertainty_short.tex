@@ -84,7 +84,10 @@ Suppose further that we are also interested in a quantity $\mathbf{y} \in
 through a deterministic model $M(\boldsymbol\theta) = \mathbf{y}$.
 We would like to obtain one distribution on $\mathbf{y}$ to represent our uncertainty about this quantity \textit{induced} by the uncertainty we have on $\boldsymbol\theta$.
 This, however, begs the question of in which order the pooling and propagation (or inducing) operations should be performed.
-One could either (a) compute the induced distributions for each expert and then combine these using LP or (b) combine the distributions first and then apply $M(\cdot)$ to obtain a distribution on $\mathbf{y}$.
+One could either (a) compute the induced distributions  on $\mathbf{y}$for each 
+expert's belief about $\boldsymbol\theta$, and then combine these using LP or 
+(b) combine the distributions first and then apply $M(\cdot)$ to obtain a single
+distribution on $\mathbf{y}$.
 
 While it is relatively straightforward to show that procedures (a) and (b) will yield the same distribution if $M(\cdot)$ is invertible, the question remains open for the case of non-invertible models, which correspond to the vast majority of epidemic models.
 
