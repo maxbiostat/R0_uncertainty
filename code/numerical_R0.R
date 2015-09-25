@@ -1,29 +1,7 @@
 source("elicit_gamma.R")
 source("gamma_ratio.R")
 source("../../CODE/maxent_aux.R")
-# Four distributions
-# N's
-N0 <- 1000
-N1 <- 2000
-N2 <- 1500
-N3 <- 2000
-Nv <- c(N0, N1, N2, N3)
-# Betas
-k10 <- 2 ; t10 <- 1/4000 
-k11 <- 1.5; t11 <- 1/4000 
-k12 <- 2; t12 <- 1/4500
-k13 <- 4; t13 <- 1/8000 
-k1v <- c(k10, k11, k12, k13)
-t1v <- c(t10, t11, t12, t13)
-
-# Gammas
-k20 <- 40; t20 <- 1/200
-k21 <- 50 ; t21 <- 1/200
-k22 <- 15; t22 <- 1/50
-k23 <- 30; t23 <- 1/300
-k2v <- c(k20, k21, k22, k23)
-t2v <- c(t20, t21, t22, t23)
-
+source("R0Example_four_gammas_parameters.r")
 #################
 K <- length(k2v)
 alphas <- rep(1, K)/K # equal weights
@@ -52,6 +30,7 @@ Ds <- list(
 ###############
 # Plotting
 ###############
+pdf("../figures/ItP_vs_PtI_equalWeights.pdf")
 curve(dgamma.ratio(x, t1 = t1Nstar, t2 = t2star, k1 = k1star, k2 = k2star, N = 1 ),
       0, 15, main = "Pooled distributions", xlab = expression(R[0]),
       ylab = "Density", lwd = 2)
@@ -59,3 +38,4 @@ curve(dpoolnorm.positive(x, D = Ds, alpha = alphas), 0, 15, lwd = 2,
       lty = 2, add = TRUE, col = 2)
 legend(x = "topright", bty = "n", legend = c("Pool-then-induce", "Induce-then-pool"),
        col = 1:2, lty = 1:2, lwd = 2)
+dev.off()
