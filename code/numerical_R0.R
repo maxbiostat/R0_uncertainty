@@ -4,7 +4,10 @@ source("../../CODE/maxent_aux.R")
 source("R0Example_four_gammas_parameters.r")
 #################
 K <- length(k2v)
-alphas <- rep(1, K)/K # equal weights
+set.seed(666)
+smp <- sample(1:100, K, replace = TRUE) 
+( alphas <- smp/sum(smp) )
+# alphas <- rep(1, K)/K # equal weights
 ###############
 # First approach: combine each beta and each gamma; construct pooled R0
 ###############
@@ -30,7 +33,7 @@ Ds <- list(
 ###############
 # Plotting
 ###############
-pdf("../figures/ItP_vs_PtI_equalWeights.pdf")
+pdf("../figures/ItP_vs_PtI_unequalWeights.pdf")
 curve(dgamma.ratio(x, t1 = t1Nstar, t2 = t2star, k1 = k1star, k2 = k2star, N = 1 ),
       0, 15, main = "Pooled distributions", xlab = expression(R[0]),
       ylab = "Density", lwd = 2)
@@ -38,4 +41,10 @@ curve(dpoolnorm.positive(x, D = Ds, alpha = alphas), 0, 15, lwd = 2,
       lty = 2, add = TRUE, col = 2)
 legend(x = "topright", bty = "n", legend = c("Pool-then-induce", "Induce-then-pool"),
        col = 1:2, lty = 1:2, lwd = 2)
+dev.off()
+pdf("../figures/density_ratio_unequalWeights.pdf")
+curve(dgamma.ratio(x, t1 = t1Nstar, t2 = t2star, k1 = k1star, k2 = k2star, N = 1 )/dpoolnorm.positive(x, D = Ds, alpha = alphas),
+      0, 15, main = "Density ratio PtI/ItP", xlab = expression(R[0]),
+      ylab = "Density ratio", lwd = 2, lty = 2)
+abline( h = 1, lwd = 2, lty = 3)
 dev.off()
