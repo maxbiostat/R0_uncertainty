@@ -221,7 +221,7 @@ One can either:
  \item[(a)] construct $\pi(\beta | \mathbf{w}) = \mathcal{LP}(\mathbf{F}(\beta), \mathbf{w})$ and $\pi(\gamma | \mathbf{w}) = \mathcal{LP}(\mathbf{G}(\gamma), \mathbf{w})$ and then apply the transform in~(\ref{eq:r0def}) to obtain $\pi(R_0| \mathbf{w})$ or;
  \item[(b)] apply the transform to each component $i$ of $\mathbf{F}(\beta)$ and $\mathbf{G}(\gamma)$ to build
  \[\mathbf{R}(R_0):= \{r_i(R_0), r_2(R_0), \ldots, r_K(R_0)\} \]
- and obtain $\pi^{\prime}(R_0|  \mathbf{w}) = \mathcal{LP}(\mathbf{R}(R_0),  \mathbf{w})$
+ and obtain $\pi^{\prime}(R_0|  \mathbf{w}) = \mathcal{LP}(\mathbf{R}(R_0),  \mathbf{w})$.
 \end{itemize}
 Notice that the transform in~(\ref{eq:r0def}) is not invertible, and thus does not enjoy the property discussed in Remark~\ref{rmk:invariance}.
 This means that in general, pooling-then-inducing (a) will yield a different distribution than inducing-then-pooling (b).
@@ -257,7 +257,7 @@ Panel B shows the pooled distribution for ${\cal R}_0$ that minimises KL diverge
 \end{figure}
 
 %% TODO: Compare the two (tails, concavity, etc) aka babble some moreverb
-\section{Mimising Kullback-Leibler divergence in transformed space}
+\section{Minimising Kullback-Leibler divergence in transformed space}
 
 
 \section{Application: $R_0$ for Ebola in West Africa}
