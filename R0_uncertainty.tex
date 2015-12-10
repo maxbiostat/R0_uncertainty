@@ -16,6 +16,7 @@
 \usepackage{amssymb}
 \usepackage{indentfirst}
 % \usepackage{todonotes}
+\usepackage{subfigure}
 \usepackage[numbers,square]{natbib}
 \bibliographystyle{plain}
 \usepackage[pdftex]{lscape}
@@ -59,7 +60,7 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newtheorem{theo}{Theorem}[]
 \newtheorem{proposition}{Proposition}[]
-\newtheorem{remark}{Remark}[]
+\newtheorem{rmk}{Remark}[]
 \setcounter{theo}{0} % assign desired value to theorem counter
 \begin{document}
 \maketitle
@@ -114,8 +115,52 @@ f_{\gamma}(g) &=& \frac{1}{\Gamma(k_2)\theta_2^{k_2}} g^{k_2} exp (- \frac{g}{\t
 
 \subsection{Logarithmic pooling} 
 
+Logarithmic pooling is a popular method for combining opinions on an agreed quantity, specially when these opinions can be framed as probability distributions.
+Let $\mathbf{F(\theta)} := \{f_1(\theta), f_2(\theta), \ldots, f_K(\theta)\}$ be a set of distributions representing the opinions of $K$ experts and let $\mathbf{w} :=\{w_1, w_2, \ldots, w_K \}$ be the vector of weights, such that $w_i > 0\: \forall i$ and $\sum_{i=0}^K w_i = 1$.
+The \textbf{logarithmic pooling operator} $\mathcal{LP}(\mathbf{F(\theta)}, \mathbf{w})$ is defined as
+\begin{equation}
+\label{eq:logpool}
+ \mathcal{LP}(\mathbf{F(\theta)}, \mathbf{w}) :=  \pi(\theta | \mathbf{w}) = t(\mathbf{w}) \prod_{i=0}^K f_i(\theta)^{w_i},
+\end{equation}
+where $t(\mathbf{w}) = \int_{\boldsymbol\Theta}\prod_{i=0}^K f_i(\theta)^{w_i}d\theta$.
+This pooling method enjoys several desirable properties and yields tractable distributions for a large class of distribution families~\citep{genest1984, carvalho2016}.
 
-\section{Induce-then-pool or pool-then-induce?}
+\subsubsection{Induce-then-pool or pool-then-induce?}
+
+Let $\theta \in \Theta \subseteq \mathbb{R}^p$ and $y \in \mathcal{Y} \subseteq \mathbb{R}^p$. 
+Define the model (transformation) as $M \,:\, \Theta \to \mathcal{Y}$. 
+This paper concerns the setting where a set $\mathbf{F(\theta)}$ of distributions on $\theta$ is available but one is interested in obtaining a pooled distribution on $y$.
+There are two ways of obtaining a pooled distribution $\pi(y)$: (a) combine the distributions in $\mathbf{F(\theta)}$ and then apply $M(\cdot)$ to the resulting distribution to get the \underline{induced} distribution on $y$ (``pool-then-induce'') or; (b) apply  $M(\cdot)$ to each component of $\mathbf{F(\theta)}$ and combine the resulting induced distributions using the logarithmic pooling operator (``induce-then-pool''). 
+First we note that under some conditions on the transformation $M(\cdot)$, the order in which one performs the pooling and transforming operations does not matter.
+%% "Stolen" from http://math.stackexchange.com/questions/732960/inverse-of-a-multivariable-function
+Consider $M(\theta) = y$ and suppose $M(\cdot)$ is invertible, i.e., there exists $M^{-1}: \: \mathcal{Y} \to \Theta$ such that,
+\[A_0:\quad M(M^{-1}(v)) = v,\: v \in \mathcal{Y}\: \text{and}\: M^{-1}(M(t)) = t, \: t \in \Theta \]
+and $J := det \left[ \frac{\partial M^{-1}}{\partial y_1}, \frac{\partial M^{-1}}{\partial y_2}, \ldots, \frac{\partial M^{-1}}{\partial y_p}\right]$.
+With some abuse of notation, define
+\begin{equation}
+ \label{eq:transfF}
+ \mathbf{F^{-1}(y)} := \{f_1(M^{-1}(y))|J|, f_2(M^{-1}(y))|J|, \ldots, f_K(M^{-1}(y))|J|\}
+\end{equation}
+where $|a|$ denotes the absolute value of $a$.
+\begin{rmk}
+\label{rmk:invariance}
+Define $\pi_{\theta}(\theta | \mathbf{w}) =  \mathcal{LP}(\mathbf{F(\theta)}, \mathbf{w})$ and $\pi_{y}(y |\mathbf{w}) = \pi_{\theta}(M^{-1}(y))|J|$.
+Similarly, define $\pi^{\prime}_{y}(y|\mathbf{w}) = \mathcal{LP}(\mathbf{F^{-1}(y)}, \mathbf{w})$.
+If $A_0$ is satisfied, then $\pi_{y}(y |\mathbf{w}) = \pi^{\prime}_{y}(y|\mathbf{w})$, i.e., the order in which one combines or transforms the distributions does not matter.
+\end{rmk}
+\begin{proof}
+To see that Remark~\ref{rmk:invariance} holds we only need a straightforward calculation from the definition of the logarithmic pooling operator in~(\ref{eq:logpool}):
+\[\pi_{y}(y |\mathbf{w}) \propto \prod_{i=0}^K f_i(\theta)^{w_i}|J| \]
+whereas
+\begin{align*}
+ \pi^{\prime}_{y}(y|\mathbf{w}) &\propto  \prod_{i=0}^K \left[ f_i(M^{-1}(y))|J| \right] ^{w_i} = \prod_{i=0}^K f_i(\theta)^{w_i} \prod_{i=0}^K|J|^{w_i}\\
+ &\propto  \prod_{i=0}^K f_i(\theta)^{w_i}|J|,
+\end{align*}
+as claimed.
+%% LM: if this embarassingly simple ``proof'' does not convince you, take a look at https://github.com/maxbiostat/R0_uncertainty/blob/master/code/invertible_model_equivalence.r
+This is very similar in nature to the ``external Bayesianity'' property of the logarithmic pooling operator, by which one can either pool the prior distributions and then combine the resulting distribution with the likelihood or combine each prior with the likelihood separately and then pool the resulting posteriors to obtain the same posterior distribution.
+%% TODO: if we can show that combining the prior with the likelihood is an invertible transform, then this result is a generalisation of EB. But we first need to see the degree of generality EB was actually proven in the original paper.
+\end{proof}
 
 
 \subsection{The Gamma ratio distribution}
@@ -164,24 +209,61 @@ The mode is
 \label{eq:mode}
 \frac{N\theta_1}{\theta_2}\frac{k_1 - 1}{(k_2 + 1)}
 \end{equation}
-
 For a slightly different derivation, based on generalised Gamma distributions, see~\cite{Coelho2007}.
 
+Now suppose we have two sets of prior probability distributions -- elicited by the same $K$ experts -- on $\beta$ and $\gamma$, $\mathbf{F}(\beta)$ and $\mathbf{G}(\gamma)$, respectively.
+We will consider that all distributions for $\beta$ and $\gamma$ are Gamma distributions, parametrised as above.
+Thus, for instance, the parameter $\theta_{2i}$ is the the scale parameter of the prior for the recovery rate ($\gamma$) given by the $i-$th expert.
+Analogous to the above, assume the experts have a vector $\mathbf{w}$ of weights associated with them.
+Suppose further that the components of these sets are independent, i.e., $p_i(\beta, \gamma) = f_i(\beta)g_i(\gamma)\: \forall i$.
+One can either:
+\begin{itemize}
+ \item[(a)] construct $\pi(\beta | \mathbf{w}) = \mathcal{LP}(\mathbf{F}(\beta), \mathbf{w})$ and $\pi(\gamma | \mathbf{w}) = \mathcal{LP}(\mathbf{G}(\gamma), \mathbf{w})$ and then apply the transform in~(\ref{eq:r0def}) to obtain $\pi(R_0| \mathbf{w})$ or;
+ \item[(b)] apply the transform to each component $i$ of $\mathbf{F}(\beta)$ and $\mathbf{G}(\gamma)$ to build
+ \[\mathbf{R}(R_0):= \{r_i(R_0), r_2(R_0), \ldots, r_K(R_0)\} \]
+ and obtain $\pi^{\prime}(R_0|  \mathbf{w}) = \mathcal{LP}(\mathbf{R}(R_0),  \mathbf{w})$
+\end{itemize}
+Notice that the transform in~(\ref{eq:r0def}) is not invertible, and thus does not enjoy the property discussed in Remark~\ref{rmk:invariance}.
+This means that in general, pooling-then-inducing (a) will yield a different distribution than inducing-then-pooling (b).
+In fact, procedure (a) will lead to
+\begin{equation}
+ \pi_{R_0}(r| \mathbf{w}) \propto   r^{k_{1}^{\ast}-1} (\theta_{2}^{\ast} r + N\theta_{1}^{\ast})^{-(k_{1}^{\ast} + k_{2}^{\ast})}
+\end{equation}
+where $k_{1}^{\ast} = \sum_{i=0}^K w_ik_{1i}$,  $k_{2}^{\ast} = \sum_{i=0}^K w_ik_{2i}$,  $\theta_{1}^{\ast} = \sum_{i=0}^K w_i\theta_{1i}$ and  $\theta_{2}^{\ast} = \sum_{i=0}^K w_i\theta_{2i}$.
+The distribution resulting from procedure (b) will be 
+\begin{align}
+  \pi^{\prime}_{R_0}(r| \mathbf{w}) &\propto   \prod_{i=0}^K \left[ r^{k_{1i}-1} (\theta_{2i} r + N\theta_{1i})^{-(k_{1i} + k_{2i})} \right]^{w_i} \\
+   &\propto r^{k_{1}^{\ast}-1}  \prod_{i=0}^K (\theta_{2i} r + N\theta_{1i})^{-w_{i}(k_{1i} + k_{2i})}
+\end{align}
+where $k_{1}^{\ast}$ is defined as before.
+An example plot of the resulting densities is shown in Figure~\ref{fig:transformAndKL}A.
 
-Pooling Gammas gives Gamma
+\begin{figure}
 
-Pooling Gamma ratios gives Loch Ness monster
+% \hfill
+\begin{center}
+\subfigure[][]{\includegraphics[scale=0.6]{figures/ItP_vs_PtI_equalWeights.pdf}} 
+\end{center}
+% \hfill
+\begin{center}
+\subfigure[][]{\includegraphics[scale=0.6]{figures/minKL_R0.pdf}} 
+\end{center}
+\caption{
+\textbf{Distributions for ${\cal R}_0$}.
+In panel A we present the `induce-then-pool'' and ``pool-then-induce'' distributions using equal weights ($\alpha_i = 1/K \:, \forall i$).
+Panel B shows the pooled distribution for ${\cal R}_0$ that minimises KL divergence with the ``induce-then-pool'' distribution, i.e., that minimises discrepancy in transformed space.
+}
+\label{fig:transformAndKL}
+\end{figure}
 
-Compare the two (tails, concavity, etc).
-
-
+%% TODO: Compare the two (tails, concavity, etc) aka babble some moreverb
+\section{Mimising Kullback-Leibler divergence in transformed space}
 
 
 \section{Application: $R_0$ for Ebola in West Africa}
 [SCAN THE LITERATURE FOR BAYESIAN ESTIMATES]
 \section*{Acknowledgements}
 \bibliography{R0}
-
 % \begin{figure}[!ht]
 % \centering
 % \includegraphics[width=\textwidth, height = 15cm]{figures/}
