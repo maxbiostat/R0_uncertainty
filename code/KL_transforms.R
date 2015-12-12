@@ -1,17 +1,35 @@
 ### This piece of code implements the KL divergence minimization for transforms
 # The idea is as follows: 
-# Let y = M(x), where both x and y can be multivariate and M() is a continuous function.
+# Let y = M(x), where both x and y can be multivariate and M() is a continuous function. [obviously, dim(x) = dim(y)]
 # Imagine each expert gives a distribution for x, f_i(x), without taking into account the induced distribution on y, g_i(y)
 # If one pools the distributions for x using L(F(x); alpha) one obtains \pi(x), which in turn induces a distribution q_1(y)
+# through the transform M().
 # At this point we might want to choose alpha such that the divergence between each induced distribution g_i(y) and q_1(y)
 # is minimized.
-# The problem is then pick an \alpha such that L = sum(KL(g_i(y)||q_1(y))) is minimum
+# The problem is then pick an \alpha such that L = sum(KL(g_i(y)||q_1(y))) attains a minimum
 source("elicit_gamma.R")
 source("gamma_ratio.R")
 source("../../CODE/maxent_aux.R")
 source("R0Example_four_gammas_parameters.r")
 ########################################
 ########################################
+# Transform + min KL section. These functions only apply to the R_0 example.
+# It's possible to write more general ones, though.
+kl.transform <- function(alpha, a1v, b1v, a2v, b2v, Nv,  ga1, gb1, ga2, gb2, gN){
+  # Computing the induced distribution using pool-then-induce (PI)
+  # q_1(y) = M(\pi(x))[*] = dgamma.ratio(y, a1 = sum(alpha*a1v), b1 = sum(alpha*b1v), a2 = sum(alpha*a2v), b2 = sum(alpha*b2v))
+  # g_i(y) = M(f_i(x)) =  dgamma.ratio(y, k1 = a1i, t1 = b1i, k2 = a2i, t2 = b2i)
+  # * - beware of the abuse of notation
+  kl2int <- function(y){
+    dgamma.ratio(y, k1 = ga1, t1 = gb1, k2 = ga2, t2 = gb2, N = gN)* log(
+      dgamma.ratio(y, k1 = ga1, t1 = gb1, k2 = ga2, t2 = gb2, N = gN)/
+        dgamma.ratio(y, k1 = sum(alpha*a1v), t1 = sum(alpha*b1v),
+                     k2 = sum(alpha*a2v), t2 = sum(alpha*b2v), N = sum(alpha*Nv))  
+    )
+  }  
+  integrate(kl2int, 0, Inf)$value
+}
+###
 optkltransform <- function(alpha, a1p, b1p, a2p, b2p, Np){
   # Let's first compute q_1(y) = M(\pi(x))
   K <- length(alpha)
@@ -24,7 +42,6 @@ optkltransform <- function(alpha, a1p, b1p, a2p, b2p, Np){
   } 
   return(ds)
 }
-
 optkltransform.inv <- function(alpha.inv, a1p, b1p, a2p, b2p, Np){
   alpha <- alpha.01(alpha.inv)
   sum(optkltransform(alpha, a1p, b1p, a2p, b2p, Np))
