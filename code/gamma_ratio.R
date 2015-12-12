@@ -15,7 +15,13 @@ dgamma.ratio <- function(x, k1, k2, t1, t2, N){
   d <- x^(k1-1) * ((t2*x + N*t1))^(-(k1+k2)) # density 
   return(c * d)
 }
-
+##
+rgamma.ratio <- function(n, k1, k2, t1, t2, N){
+  A <- rgamma(n = n, shape = k1, scale = t1)*N
+  B <- rgamma(n = n, shape = k2, scale = t2)
+  return(A/B)
+}
+##
 dgamma.ratio.Ncorrected<- function(x, k1, k2, t1, t2, N){
   c <- {(N*t1*t2)^(k1+k2)}/(beta(k1, k2)*((N*t1)^k1)*(t2^k2)) 
   S <- integrate(dgamma.ratio, k1 = k1, k2 = k2, t1 = t1, t2 = t2, N = N, 0, N)$value
@@ -23,7 +29,7 @@ dgamma.ratio.Ncorrected<- function(x, k1, k2, t1, t2, N){
   d <- x^(k1-1) * ((t2*x + N*t1))^(-(k1+k2)) # density 
   return(cnew * d)
 }
-
+##
 entropy.gamma.ratio <- function(k1, t1, k2, t2, N){
   expectlog <- function(x){ -log(x) * dgamma.ratio(x, k1 = k1, t1 = t1,
                                                    k2 = k2, t2 = t2, N = N)}
