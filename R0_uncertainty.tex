@@ -40,7 +40,7 @@
 \renewcommand{\title}[1]{\LaTeXtitle{\Large{\textbf{#1}}}}
 
 % Title Page
-\title{Some remarks on the uncertainty analysis of $R_0$ in the SIR model}
+\title{Some remarks on the uncertainty analysis of ${\cal R}_0$ in the SIR model}
 
 \speaker{Luiz Max F. de Carvalho} % Write speaker name here
 
@@ -72,7 +72,7 @@ Key-words: Basic reproductive number; uncertainty; logarithmic pooling; Gamma ra
 
 \section{Background}
 
-$R_0$ is important, a key quantity in epidemic modelling.
+${\cal R}_0$ is important, a key quantity in epidemic modelling.
 
 Acknowledging uncertainty on parameter values is important.
 
@@ -94,7 +94,7 @@ where  $S(t) + I(t) + R(t) = N \quad \forall t$, $\beta$ is the transmission (in
 
 \begin{equation}
 \label{eq:r0def}
-R_0 = \frac{\beta N}{\gamma}. 
+{\cal R}_0 = \frac{\beta N}{\gamma}. 
 \end{equation}
 
 \subsection{Uncertainty analysis}
@@ -103,7 +103,7 @@ $p(\beta, \gamma)$
 
 $M(\cdot)$
 
-$M(p(\beta, \gamma)) = p(R_0)$
+$M(p(\beta, \gamma)) = p({\cal R}_0)$
 
 For simplicity we will assume that $p(\beta, \gamma) = p(\beta)p(\gamma)$.
 
@@ -139,22 +139,22 @@ and $J := det \left[ \frac{\partial M^{-1}}{\partial y_1}, \frac{\partial M^{-1}
 With some abuse of notation, define
 \begin{equation}
  \label{eq:transfF}
- \mathbf{F^{-1}(y)} := \{f_1(M^{-1}(y))|J|, f_2(M^{-1}(y))|J|, \ldots, f_K(M^{-1}(y))|J|\}
+ \mathbf{F^{-1}(y)} := \{f_1(M^{-1}(y))|J|, \, f_2(M^{-1}(y))|J|, \ldots, \, f_K(M^{-1}(y))|J|\}
 \end{equation}
 where $|a|$ denotes the absolute value of $a$.
 \begin{rmk}
 \label{rmk:invariance}
 Define $\pi_{\theta}(\theta | \mathbf{w}) =  \mathcal{LP}(\mathbf{F(\theta)}, \mathbf{w})$ and $\pi_{y}(y |\mathbf{w}) = \pi_{\theta}(M^{-1}(y))|J|$.
 Similarly, define $\pi^{\prime}_{y}(y|\mathbf{w}) = \mathcal{LP}(\mathbf{F^{-1}(y)}, \mathbf{w})$.
-If $A_0$ is satisfied, then $\pi_{y}(y |\mathbf{w}) = \pi^{\prime}_{y}(y|\mathbf{w})$, i.e., the order in which one combines or transforms the distributions does not matter.
+If $A_0$ is satisfied, then $\pi_{y}(y |\mathbf{w}) = \pi^{\prime}_{y}(y|\mathbf{w})$, i.e., the order in which one combines and transforms the distributions does not matter.
 \end{rmk}
 \begin{proof}
 To see that Remark~\ref{rmk:invariance} holds we only need a straightforward calculation from the definition of the logarithmic pooling operator in~(\ref{eq:logpool}):
-\[\pi_{y}(y |\mathbf{w}) \propto \prod_{i=0}^K f_i(\theta)^{w_i}|J| \]
+\[\pi_{y}(y |\mathbf{w}) \propto \prod_{i=0}^K f_i(M^{-1}(y))^{w_i}|J| \]
 whereas
 \begin{align*}
- \pi^{\prime}_{y}(y|\mathbf{w}) &\propto  \prod_{i=0}^K \left[ f_i(M^{-1}(y))|J| \right] ^{w_i} = \prod_{i=0}^K f_i(\theta)^{w_i} \prod_{i=0}^K|J|^{w_i}\\
- &\propto  \prod_{i=0}^K f_i(\theta)^{w_i}|J|,
+ \pi^{\prime}_{y}(y|\mathbf{w}) &\propto  \prod_{i=0}^K \left[ f_i(M^{-1}(y))|J| \right] ^{w_i} = \prod_{i=0}^K f_i(M^{-1}(y))^{w_i} \prod_{i=0}^K|J|^{w_i}\\
+ &\propto  \prod_{i=0}^K f_i(M^{-1}(y))^{w_i}|J|, %TODO: maybe = instead of \propto ?
 \end{align*}
 as claimed.
 %% LM: if this embarassingly simple ``proof'' does not convince you, take a look at https://github.com/maxbiostat/R0_uncertainty/blob/master/code/invertible_model_equivalence.r
@@ -168,22 +168,22 @@ This is very similar in nature to the ``external Bayesianity'' property of the l
 To derive the distribution, we begin by noting that for $N > 1$, the distribution of $\beta^{\ast} = \beta N$ is a Gamma distribution with parameters $k_1$ and $N\theta_1$.
 Under the assumption of independence $p(\beta^{\ast}, \gamma) = p(\beta^{\ast})p(\gamma)$, thus
 \begin{eqnarray}
-% R_0 &=& \frac{\beta^{\ast}}{\gamma}\\
-R_0 &=& \beta^{\ast}/\gamma\\
-f_{R_0}(r) &=& A \int_{0}^{\infty} \gamma(\gamma r)^{k_1 -1} e^{-\frac{\gamma r}{N\theta_1}} \gamma^{k_2 -1} e^{-\frac{\gamma}{\theta_2}} d\gamma \\
+% {\cal R}_0 &=& \frac{\beta^{\ast}}{\gamma}\\
+{\cal R}_0 &=& \beta^{\ast}/\gamma\\
+f_{{\cal R}_0}(r) &=& A \int_{0}^{\infty} \gamma(\gamma r)^{k_1 -1} e^{-\frac{\gamma r}{N\theta_1}} \gamma^{k_2 -1} e^{-\frac{\gamma}{\theta_2}} d\gamma \\
 A &=& \frac{1}{\Gamma(k_1)(N\theta_1)^{k_1}\Gamma(k_2)\theta_2^{k_2}}
 \end{eqnarray}
 Rearranging, yields
 \begin{eqnarray}
 \label{eq:toint}
-f_{R_0}(r) &=& A \int_{0}^{\infty} r^{k_1 -1} \gamma^{k_1 + k_2 -1} e^{-B\gamma} d\gamma \\
+f_{{\cal R}_0}(r) &=& A \int_{0}^{\infty} r^{k_1 -1} \gamma^{k_1 + k_2 -1} e^{-B\gamma} d\gamma \\
         B  &=& \frac{\theta_2 r + N\theta_1}{N\theta_1\theta_2}
 \end{eqnarray}
 
 \begin{eqnarray}
 \label{eq:density}
-f_{R_0}(r) &=& \phi\times\space r^{k_1-1} (\theta_2 r + N\theta_1)^{-(k_1 + k_2)} \\
-% f_{R_0}(r) &=& \phi\frac{r^{k_1-1}}{(\theta_2 r + N\theta_1)^{(k_1 + k_2)}}\\
+f_{{\cal R}_0}(r) &=& \phi\times\space r^{k_1-1} (\theta_2 r + N\theta_1)^{-(k_1 + k_2)} \\
+% f_{{\cal R}_0}(r) &=& \phi\frac{r^{k_1-1}}{(\theta_2 r + N\theta_1)^{(k_1 + k_2)}}\\
 \label{eq:normconst}
 \phi &=&  \frac{(N\theta_1\theta_2)^{k1+k2}}{\mathcal{B}(k_1, k_2)(N\theta_1)^{k_1}\theta_2^{k_2} }
 \end{eqnarray}
@@ -192,13 +192,13 @@ The probability distribution in~(\ref{eq:density}) will be called Gamma ratio di
 The expectation of the Gamma ratio distribution is then
 \begin{align}
 \label{eq:expR0}
-E(R_0) &= \int_{0}^{\infty}rf_{R0}(r)dr \\
+E({\cal R}_0) &= \int_{0}^{\infty}rf_{R0}(r)dr \\
        &= \frac{N\theta_1}{\theta_2}\frac{k_1}{(k_2-1)}
 \end{align}
 and its variance can be computed as
 \begin{eqnarray}
 \label{eq:var1}
-Var(R_0) &=& E(R_0^2) - E(R_0)^2  \\
+Var({\cal R}_0) &=& E({\cal R}_0^2) - E({\cal R}_0)^2  \\
 \label{eq:var2}
  &=& \left(\frac{N\theta_1}{\theta_2}\right)^2\frac{(k_1+k_2-1)k_1}{(k_2-2)(k_2-1)^2}
 \end{eqnarray}
@@ -218,28 +218,29 @@ Analogous to the above, assume the experts have a vector $\mathbf{w}$ of weights
 Suppose further that the components of these sets are independent, i.e., $p_i(\beta, \gamma) = f_i(\beta)g_i(\gamma)\: \forall i$.
 One can either:
 \begin{itemize}
- \item[(a)] construct $\pi(\beta | \mathbf{w}) = \mathcal{LP}(\mathbf{F}(\beta), \mathbf{w})$ and $\pi(\gamma | \mathbf{w}) = \mathcal{LP}(\mathbf{G}(\gamma), \mathbf{w})$ and then apply the transform in~(\ref{eq:r0def}) to obtain $\pi(R_0| \mathbf{w})$ or;
+ \item[(a)] construct $\pi(\beta | \mathbf{w}) = \mathcal{LP}(\mathbf{F}(\beta), \mathbf{w})$ and $\pi(\gamma | \mathbf{w}) = \mathcal{LP}(\mathbf{G}(\gamma), \mathbf{w})$ and then apply the transform in~(\ref{eq:r0def}) to obtain $\pi({\cal R}_0| \mathbf{w})$ or;
  \item[(b)] apply the transform to each component $i$ of $\mathbf{F}(\beta)$ and $\mathbf{G}(\gamma)$ to build
- \[\mathbf{R}(R_0):= \{r_i(R_0), r_2(R_0), \ldots, r_K(R_0)\} \]
- and obtain $\pi^{\prime}(R_0|  \mathbf{w}) = \mathcal{LP}(\mathbf{R}(R_0),  \mathbf{w})$.
+ \[\mathbf{R}({\cal R}_0):= \{r_i({\cal R}_0), r_2({\cal R}_0), \ldots, r_K({\cal R}_0)\} \]
+ and obtain $\pi^{\prime}({\cal R}_0|  \mathbf{w}) = \mathcal{LP}(\mathbf{R}({\cal R}_0),  \mathbf{w})$.
 \end{itemize}
 Notice that the transform in~(\ref{eq:r0def}) is not invertible, and thus does not enjoy the property discussed in Remark~\ref{rmk:invariance}.
 This means that in general, pooling-then-inducing (a) will yield a different distribution than inducing-then-pooling (b).
 In fact, procedure (a) will lead to
 \begin{equation}
- \pi_{R_0}(r| \mathbf{w}) \propto   r^{k_{1}^{\ast}-1} (\theta_{2}^{\ast} r + N\theta_{1}^{\ast})^{-(k_{1}^{\ast} + k_{2}^{\ast})}
+ \pi_{{\cal R}_0}(r| \mathbf{w}) \propto   r^{k_{1}^{\ast}-1} (\theta_{2}^{\ast} r + N\theta_{1}^{\ast})^{-(k_{1}^{\ast} + k_{2}^{\ast})}
 \end{equation}
 where $k_{1}^{\ast} = \sum_{i=0}^K w_ik_{1i}$,  $k_{2}^{\ast} = \sum_{i=0}^K w_ik_{2i}$,  $\theta_{1}^{\ast} = \sum_{i=0}^K w_i\theta_{1i}$ and  $\theta_{2}^{\ast} = \sum_{i=0}^K w_i\theta_{2i}$.
 The distribution resulting from procedure (b) will be 
 \begin{align}
-  \pi^{\prime}_{R_0}(r| \mathbf{w}) &\propto   \prod_{i=0}^K \left[ r^{k_{1i}-1} (\theta_{2i} r + N\theta_{1i})^{-(k_{1i} + k_{2i})} \right]^{w_i} \\
+  \pi^{\prime}_{{\cal R}_0}(r| \mathbf{w}) &\propto   \prod_{i=0}^K \left[ r^{k_{1i}-1} (\theta_{2i} r + N\theta_{1i})^{-(k_{1i} + k_{2i})} \right]^{w_i} \\
    &\propto r^{k_{1}^{\ast}-1}  \prod_{i=0}^K (\theta_{2i} r + N\theta_{1i})^{-w_{i}(k_{1i} + k_{2i})}
 \end{align}
 where $k_{1}^{\ast}$ is defined as before.
 An example plot of the resulting densities is shown in Figure~\ref{fig:transformAndKL}A.
-
+We note that $\pi^{\prime}({\cal R}_0|  \mathbf{w})$ has thicker tails and therefore allows for more extreme values with higher probability.
+This makes sense intuitively, because this distribution propagates uncertainty resulting from the model onto the final quantity.
+% TODO: can we prove that [ItP has thicker tails] in general?
 \begin{figure}
-
 % \hfill
 \begin{center}
 \subfigure[][]{\includegraphics[scale=0.6]{figures/ItP_vs_PtI_equalWeights.pdf}} 
@@ -260,7 +261,7 @@ Panel B shows the pooled distribution for ${\cal R}_0$ that minimises KL diverge
 \section{Minimising Kullback-Leibler divergence in transformed space}
 
 
-\section{Application: $R_0$ for Ebola in West Africa}
+\section{Application: ${\cal R}_0$ for Ebola in West Africa}
 [SCAN THE LITERATURE FOR BAYESIAN ESTIMATES]
 \section*{Acknowledgements}
 \bibliography{R0}
