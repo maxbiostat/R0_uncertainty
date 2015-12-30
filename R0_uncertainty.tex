@@ -151,7 +151,7 @@ Similarly, define $\pi^{\prime}_{y}(y|\mathbf{w}) = \mathcal{LP}(\mathbf{F^{-1}_
 If $A_0$ is satisfied, then $\pi_{y}(y |\mathbf{w}) = \pi^{\prime}_{y}(y|\mathbf{w})$, i.e., the order in which one combines and transforms the distributions does not matter.
 \end{rmk}
 \begin{proof}
-To see that Remark~\ref{rmk:invariance} holds we only need a straightforward calculation from the definition of the logarithmic pooling operator in~(\ref{eq:logpool}):
+To see that Remark~\ref{rmk:invariance} holds, we only need a straightforward calculation from the definition of the logarithmic pooling operator in~(\ref{eq:logpool}):
 \[\pi_{y}(y |\mathbf{w}) \propto \prod_{i=0}^K f_i(M^{-1}(y))^{w_i}|J| \]
 whereas
 \begin{align*}
@@ -170,7 +170,7 @@ Here go my two cents.
 Suppose $M(\cdot)$ is not invertible on the whole of $\mathcal{Y}$, but instead is \textbf{piece-wise invertible}.
 Let $\mathcal{Y}_1, \mathcal{Y}_2, \ldots, \mathcal{Y}_T$ be a  partition of $\mathcal{Y}$, i.e., $\mathcal{Y}_i\cap\mathcal{Y}_j = \emptyset,\: \forall i\neq j \in \{1, 2, \ldots, T\}$ and $\bigcup_{t = 1}^T\mathcal{Y}_t = \mathcal{Y}$.
 Then define the inverse functions $M_{t}^{-1}(y)\,:\, \mathcal{Y}_t \to \Theta, \: t \in \{1, 2, \ldots, T\}$.
-Last, let $|J_t|$ be the Jacobian of $M_{t}^{-1}(\cdot)$.
+Last, let $J_t$ be the Jacobian of $M_{t}^{-1}(\cdot)$.
 Then we are prepared to write:
 \begin{align}
 \label{eq:piecewiseTransf}
