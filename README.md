@@ -8,6 +8,6 @@
 To be presented at the [Epidemic Mathematical Modeling Conference](http://math-epidemics.emap.fgv.br/), Rio de Janeiro -- Brazil, January, 2016. See the [extended abstract.](https://github.com/maxbiostat/R0_uncertainty/blob/master/R0_uncertainty_short.pdf)
 
 Manuscript:
-[![PDF Status]](https://github.com/maxbiostat/R0_uncertainty/blob/master/R0_uncertainty.pdf)
+[PDF Status](https://github.com/maxbiostat/R0_uncertainty/blob/master/R0_uncertainty.pdf)
 
 ![](http://math-epidemics.emap.fgv.br/sites/math-epidemics.emap.fgv.br/themes/math/logo.png)
