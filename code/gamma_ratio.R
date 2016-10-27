@@ -8,8 +8,7 @@
 # beta distribution of the second kind) with parameters k1,t1,k2,t2 and N.
 # In this toy example, if we can represent our uncertainty about \beta and \gamma by means of Gamma random variables,
 # we can calculate the distribution and moments analytically.
-## Copyleft(or the one to blame): Carvalho, LMF (2015)
-
+## Copyleft(or the one to blame): Carvalho, LMF (2016)
 dgamma.ratio <- function(x, k1, k2, t1, t2, N){
   c <- {(N*t1*t2)^(k1+k2)}/(beta(k1,k2)*((N*t1)^k1)*(t2^k2)) # normalising constant
   d <- x^(k1-1) * ((t2*x + N*t1))^(-(k1+k2)) # density 
@@ -20,6 +19,19 @@ rgamma.ratio <- function(n, k1, k2, t1, t2, N){
   A <- rgamma(n = n, shape = k1, scale = t1)*N
   B <- rgamma(n = n, shape = k2, scale = t2)
   return(A/B)
+}
+##
+pgamma.ratio <- function(q, k1, k2, t1, t2, N){
+  integrate(dgamma.ratio, 0, q, k1 = k1, t1 = t1, k2 = k2, t2 = t2, N = N)$value
+}
+##
+qgamma.ratio <- function(p, k1, k2, t1, t2, N){# TODO: derive a proper upper limit (N doesn't work)
+  optQuant <- function(x){
+    (pgamma.ratio(x, k1 = k1, t1 = t1, k2 = k2, t2 = t2, N = N)-p)^2
+  }
+  Upr <- (k1/(k2-1))*(t1*N/t2) + p*10 * sqrt( ((N*t1/t2)^2)* (k1*(k1+k2-1))/((k2-2)*(k2-1)^2))
+  Ans <- optimise(optQuant, lower = 0, upper = Upr)# this upper limit should work
+  return(Ans$minimum)
 }
 ##
 dgamma.ratio.Ncorrected<- function(x, k1, k2, t1, t2, N){
