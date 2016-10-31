@@ -1,14 +1,14 @@
 source("../code/gamma_ratio.R")
-par.N <- 1000
-par.k1 <- 2
-par.t1 <- 1/6000
-par.k2 <- 40
-par.t2 <- 1/200
-# par.N <- 10
-# par.k1 <- 80#2
-# par.t1 <- .75#1/6000
-# par.k2 <- 300#40
-# par.t2 <- .15#1/200
+# par.N <- 1000
+# par.k1 <- 2
+# par.t1 <- 1/6000
+# par.k2 <- 40
+# par.t2 <- 1/200
+par.N <- 2
+par.k1 <- 80
+par.t1 <- .75
+par.k2 <- 300
+par.t2 <- .15
 NN <- 3E6
 X <- rgamma.ratio(n = NN, k1 = par.k1, t1 = par.t1, 
                   t2 = par.t2, k2 = par.k2, N = par.N)
