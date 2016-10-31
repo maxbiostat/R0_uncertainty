@@ -37,8 +37,11 @@ qgamma.ratio <- function(p, k1, k2, t1, t2, N){# TODO: derive a proper upper lim
   optQuant <- function(x){
     (pgamma.ratio(x, k1 = k1, t1 = t1, k2 = k2, t2 = t2, N = N)-p)^2
   }
-  Ans <- nlminb(start = 1, objective = optQuant, lower = 0)
-  return(Ans$par)
+  Upr <- (k1/(k2-1))*(t1*N/t2) + p*10 * sqrt( ((N*t1/t2)^2)* (k1*(k1+k2-1))/((k2-2)*(k2-1)^2))
+  Ans <- optimise(optQuant, lower = 0, upper = Upr)# this upper limit should work
+  return(Ans$minimum)
+  # Ans <- nlminb(start = 1E-6 , objective = optQuant, lower = 0)
+  # return(Ans$par)
 }
 qgamma.ratio <- Vectorize(qgamma.ratio)
 ##
