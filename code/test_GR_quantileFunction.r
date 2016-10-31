@@ -4,7 +4,12 @@ par.k1 <- 2
 par.t1 <- 1/6000
 par.k2 <- 40
 par.t2 <- 1/200
-NN <- 1E5
+# par.N <- 10
+# par.k1 <- 80#2
+# par.t1 <- .75#1/6000
+# par.k2 <- 300#40
+# par.t2 <- .15#1/200
+NN <- 3E6
 X <- rgamma.ratio(n = NN, k1 = par.k1, t1 = par.t1, 
                   t2 = par.t2, k2 = par.k2, N = par.N)
 hist(X, probability = TRUE)
@@ -16,18 +21,19 @@ curve(dnorm(x, mean = (par.k1/(par.k2-1))*(par.t1*par.N/par.t2),
       col = "black", lwd = 3)
 legend(x = "topright", legend = c("GR", "Normal approx"),
        col = c("blue", "black"), lwd = 2, bty = "n")
-median(X)
+
 summary(X)
 pgamma.ratio(median(X), k1 = par.k1, t1 = par.t1, 
              t2 = par.t2, k2 = par.k2, N = par.N)
 quantile(X, .025)
 qgamma.ratio(.025, k1 = par.k1, t1 = par.t1, 
              t2 = par.t2, k2 = par.k2, N = par.N)
+median(X)
 qgamma.ratio(.5, k1 = par.k1, t1 = par.t1, 
-       t2 = par.t2, k2 = par.k2, N = par.N)
+             t2 = par.t2, k2 = par.k2, N = par.N)
+
 quantile(X, .95)
 qgamma.ratio(.95, k1 = par.k1, t1 = par.t1, t2 = par.t2, k2 = par.k2, N = par.N)
 
-quantile(X, .999)
-qgamma.ratio(.999, k1 = par.k1, t1 = par.t1, t2 = par.t2, k2 = par.k2, N = par.N)
-## 
+quantile(X, .999999999)
+qgamma.ratio(.999999999, k1 = par.k1, t1 = par.t1, t2 = par.t2, k2 = par.k2, N = par.N)
