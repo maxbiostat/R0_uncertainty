@@ -198,7 +198,7 @@ h_{\rr}( r \mid \mu_{\beta}, \sigma_{\beta}, \mu_{\gamma}, \sigma_{\gamma}) =   
 \end{equation}
 i.e. a log-normal distribution with parameters $\mu_{\rr} = \ln N + \mu_{\beta} - \mu_{\gamma}$ and $\sigma_{\rr} = \sigma_{\beta}^2 + \sigma_{\gamma}^2$.
 Under the justification of employing a non-informative prior, researchers might be tempted to choose $\mu_{\beta} = \mu_{\gamma} = 0$ and $ \sigma_{\beta} = \sigma_{\gamma} = 100$, say -- see e.g.~\cite{Ho2018}, section 5.1.
-This apparently non-informative choice of hyperparameters leads to a prior on $\rr$ for which  $E[\rr ] = \exp(10^4)$ and $\text{Pr}(\rr > 100) = 0.49$, which are not reasonable.
+This apparently non-informative choice of hyperparameters leads to a prior on $\rr$ for which  $E[\rr ] = N + \exp(10^4)$ and $\text{Pr}(\rr > 100) = 0.49$, which are not reasonable.
 
 \paragraph{Informative priors on $\beta$ and $\gamma$}
 
