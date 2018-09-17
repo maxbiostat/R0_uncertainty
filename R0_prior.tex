@@ -223,6 +223,19 @@ Black lines represent the Gamma priors (and Gamma ratio for $\rr$) and grey line
 \label{fig:informative_priors_example}
 \end{figure}
 
+\paragraph{Accounting for Biology}
+
+The physical interpretation of $\rr$ is the number of secondary infections caused by a single infectious individual in a susceptible population.
+This means that $\rr$ cannot exceed the population size $N$, which for simplicity we will assume is fixed through time.
+One can obtain a distribution on $\rr$ with the correct bounds by correcting the distribution to have all of its probability density in the interval $[0, N]$:
+\begin{equation}
+f_{\rr}^\prime(r \mid k_{\beta}, \theta_{\beta}, k_{\gamma}, \theta_{\gamma}, N) =  
+ \begin{cases}
+  \frac{1}{ F_{\rr}(N)} f_{\rr}(r \mid k_{\beta}, \theta_{\beta},  k_{\gamma}, \theta_{\gamma}, N ), \:  0 < r < N, \\
+  0, \: \text{otherwise}
+ \end{cases}
+\end{equation}
+
 % \begin{table}[bt]
 % \caption{This is a table. Tables should be self-contained and complement, but not duplicate, information contained in the text. They should be not be provided as images. Legends should be concise but comprehensive – the table, legend and footnotes must be understandable without reference to the text. All abbreviations must be defined in footnotes.}
 % \begin{threeparttable}
