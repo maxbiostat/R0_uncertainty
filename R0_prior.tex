@@ -194,7 +194,7 @@ h_{\gamma}(g \mid \mu_{\gamma}, \sigma_{\gamma}) &=& \frac{1}{g \sigma_{\gamma}\
 It is straightforward to show that the induced distribution on $\rr$ is
 \begin{equation}
  \label{eq:r0lognormal}
-h_{\rr}( r \mid \mu_{\beta}, \sigma_{\beta}, \mu_{\gamma}, \sigma_{\gamma}) =   \frac{1}{r \sqrt{2\pi \left( \sigma_{\beta}^2 + \sigma_{\gamma}^2 \right) }} \exp\left( - \frac{ \left( \ln r - \log N - \mu_{\beta} + \mu_{\gamma}  \right)^2 }{2 \sigma_{\beta}^2} \right),
+h_{\rr}( r \mid \mu_{\beta}, \sigma_{\beta}, \mu_{\gamma}, \sigma_{\gamma}) =   \frac{1}{r \sqrt{2\pi \left( \sigma_{\beta}^2 + \sigma_{\gamma}^2 \right) }} \exp\left( - \frac{ \left( \ln r - \log N - \mu_{\beta} + \mu_{\gamma}  \right)^2 }{2 \left(\sigma_{\beta}^2 + \sigma_{\gamma}^2\right) } \right),
 \end{equation}
 i.e. a log-normal distribution with parameters $\mu_{\rr} = \log N + \mu_{\beta} - \mu_{\gamma}$ and $\sigma_{\rr} = \sigma_{\beta}^2 + \sigma_{\gamma}^2$.
 Under the justification of employing a non-informative prior, researchers might be tempted to choose $\mu_{\beta} = \mu_{\gamma} = 0$ and $ \sigma_{\beta} = \sigma_{\gamma} = 100$, say -- see e.g.~\cite{Ho2018}, section 5.1.
