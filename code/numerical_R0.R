@@ -1,4 +1,3 @@
-source("elicit_gamma.R")
 source("gamma_ratio.R")
 source("../../CODE/maxent_aux.R")
 source("R0Example_four_gammas_parameters.r")
