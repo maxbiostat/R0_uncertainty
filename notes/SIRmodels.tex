@@ -12,7 +12,7 @@
 
 \date{25/09/18}
 \title{SIR Models}
-\begin{document}
+\begin{document} 
 \maketitle
  \section*{Alternative formulations for SIR Models}
  
@@ -31,10 +31,25 @@ this definition of $S(t)$ into the standard $\frac{dR}{dt}=\gamma I$, and obtain
 
 \begin{equation}
  \frac{dR}{dt}=\gamma\left(N-R-S_0 e^{-{\cal R}_0 R} \right)
+ \label{eq:R}
 \end{equation}
+
 
 With this we have reduce a 3-dimensional system to a single equation embodying 
 the full SIR dynamics.
 
+\section{Approximate Solution}
+Equation \ref{eq:R} does not have a direct solution. but an approximate solution can be obtained by assuming ${\cal R}_0 R$ remains small for then $e^{-{\cal R}_0 R} \approxeq 1-({\cal R}_0 R})+({\cal R}_0 R})^2$ and (\ref{eq:R}) reduces to the first order quadratic ODE
+
+\begin{equation}
+\frac{dZ}{dt}\approxeq \gamma\left(N-S_0 +[S_0 {\cal R}_0 - 1]R-(S_0{\cal R}_0^2/2)R^2 \right)
+\end{equation}
+
+which takes the standard solution
+
+\begin{equation}
+ R(t)=\frac{1}{{\cal R}_0^2S_0} \{(S_0{\cal R}_0)-1+\alpha \tanh[(\alpha\gamma t/2)-\phi]}
+\end{equation}
+where the amplitude $\alpha=\sqrt{[S_0{\cal R}_0 - 1]^2 + 2S_0I_0{\cal R}_0^2}$, and the phase $\phi=\tanh^{-1}\{(S_0{\cal R}_0 -1)/\alpha\}$
 \end{document}
  
