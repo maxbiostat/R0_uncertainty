@@ -29,11 +29,10 @@ data {
   real<lower=0> br;
 }
 transformed data{
-  real xr[2] =  rep_array(0.0, 2);
+  real xr[2] = rep_array(0.0, 2);
   int xi[2] = rep_array(0, 2);
 }
 parameters {
-  real<lower=0, upper=1> r_init[2]; // initial population
   real<lower=0> beta;
   real<lower=0> gamma;
   real<lower=0, upper=1> s0;
@@ -45,7 +44,7 @@ transformed parameters {
     theta[1] = beta;
     theta[2] = gamma;
     theta[3] = s0;
-    r = integrate_ode_rk45(dr_dt, r_init, 0, ts, theta,
+    r = integrate_ode_rk45(dr_dt, {y_init, 0.0}, 0, ts, theta,
                                          xr, xi,
                                          1e-6, 1e-5, 1e3);
 }
@@ -54,8 +53,6 @@ model {
   gamma ~ gamma(ag, bg);
   s0 ~ beta(as, bs);
   sigma ~ normal(0, 1);
-  r_init ~ beta(ar, br);
-  y_init ~ lognormal(log(r_init[1]), sigma);
   y ~ lognormal(log(r[, 1]), sigma);
 }
 generated quantities{
