@@ -170,7 +170,7 @@ The mode is
 \end{equation}
 Please notice that the formulae given here might differ from those given in~\cite{Clancy2008} because we use a shape/scale parametrisation whilst those authors assume the prior distributions on $\beta$ and $\gamma$ are parametrised in terms of shape and rate.
 As discussed by~\cite{Clancy2008} (section 3.2), the induced prior on $\rr$ displays some undesirable statistical properties.
-For instance, for fairly standard choices of the hyperparameters, namely $k_\beta = k_\gamma = 1$ and $\theta_\beta = \theta_\gamma = \epsilon$ where $\epsilon$ is a large positive number, one ends up with a distribution on $\rr$ for which $E[\rr] > 1$, the variance is undefined and $\text{Pr}(\rr > 1) = 1/2$, which assigns equal probability to epidemic and disease-free equilibria.
+For instance, for fairly standard choices of the hyperparameters, namely $k_\beta = k_\gamma = 1$ and $\theta_\beta = \theta_\gamma = S$ where $S$ is a large positive number, one ends up with a distribution on $\rr$ for which $E[\rr] > 1$, the variance is undefined and $\text{Pr}(\rr > 1) = 1/2$, which assigns equal probability to epidemic and disease-free equilibria.
 %TODO: can we show that stuff goes tits up even with informative priors? Nah, probably not
 We also note that $f_{\rr}(r)$ is concave only for % TODO: this should probably go. This bound is ALWAYS bigger than the mode. On the other hand, it shows where the tail starts...
 \begin{equation}
@@ -227,7 +227,7 @@ Black lines represent the Gamma priors (and Gamma ratio for $\rr$) and grey line
 
 The physical interpretation of $\rr$ is the number of secondary infections caused by a single infectious individual in a susceptible population.
 This means that $\rr$ cannot exceed the population size $N$, which for simplicity we will assume is fixed through time.
-One can obtain a distribution on $\rr$ with the correct bounds by correcting the distribution to have all of its probability density in the interval $[0, N]$:
+One can obtain a distribution on $\rr$ with the correct bounds by correcting the distribution to have all of its probability mass in the interval $[0, N]$:
 \begin{equation}
 f_{\rr}^\prime(r \mid k_{\beta}, \theta_{\beta}, k_{\gamma}, \theta_{\gamma}, N) =  
  \begin{cases}
@@ -290,7 +290,7 @@ f_{\rr}(r) &=& A  r^{k_{\beta} -1} \int_{0}^{\infty} \gamma^{k_{\beta} + k_{\gam
         B  &:=& \frac{\theta_{\gamma} r + N\theta_{\beta}}{N\theta_{\beta}\theta_{\gamma}}.
 \end{eqnarray}
 Noticing the integral in (\ref{eq:toint}) is the kernel of a Gamma pdf gives the result in~(\ref{eq:density}).
-For a slightly different derivation, based on generalised Gamma distributions, see~\cite{Coelho2007}.
+For a two slightly different derivations, see~\cite{Coelho2007} for a calculation based on generalised Gamma distributions and~\cite{Clancy2008} for a similar derivation to ours, but using the shape/rate parametrisation of the Gamma distribution.
 
 % Submissions are not required to reflect the precise reference formatting of the journal (use of italics, bold etc.), however it is important that all key elements of each reference are included.
 \bibliography{R0}
