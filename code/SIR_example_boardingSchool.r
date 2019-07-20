@@ -30,7 +30,7 @@ library(rstan)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
-SIR_code <- stan_model(file = "stan/sir_simple.stan")
+SIR_code <- stan_model(file = "stan/sir_simple_I(t).stan")
 
 ### Varying alpha
 SIR.map.s1 <- optimizing(SIR_code, data = epi.data, hessian = TRUE, verbose = TRUE)
