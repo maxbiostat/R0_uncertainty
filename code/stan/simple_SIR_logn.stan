@@ -29,6 +29,10 @@ data {
 transformed data{
   real xr[2] = rep_array(0.0, 2);
   int xi[2] = rep_array(0, 2);
+  real mu_b = (3 / 2) * (log(ag / bg)) - log((1 / bg) + 1);
+  real sigma_b = sqrt(log(((1 / bb) + 1) * bb / ab));
+  real mu_g = (3 / 2) * (log(ab / bb)) - log((1 / bb) + 1);
+  real sigma_g = sqrt(log(((1 / bg) + 1) * bg / ag));
 }
 parameters {
   real<lower=0> beta;
@@ -39,10 +43,6 @@ parameters {
 transformed parameters {
     real theta[3];   // theta = { beta, gamma, s0 }
     real  r[n_obs, 2];
-    real mu_b = (3 / 2) * (log(ag / bg)) - log((1 / bg) + 1);
-    real sigma_b = sqrt(log(((1 / bb) + 1) * bb / ab));
-    real mu_g = (3 / 2) * (log(ab / bb)) - log((1 / bb) + 1);
-    real sigma_g = sqrt(log(((1 / bg) + 1) * bg / ag));
     theta[1] = beta;
     theta[2] = gamma;
     theta[3] = s0;
