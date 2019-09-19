@@ -30,10 +30,10 @@ data {
 transformed data{
   real x_r[2] = rep_array(0.0, 2);
   int x_i[2] = rep_array(0, 2);
-  real mu_b = log(ab / bb) - (0.5 * log((1 + 1 / ab));
-  real sigma_b = sqrt(log((1 + 1 / ab));
-  real mu_g = log(ag / bg) - (0.5 * log((1 + 1 / ag));
-  real sigma_g = sqrt(log((1 + 1 / ag));
+  real mu_b = log(ab / bb) - (0.5 * log(1 + 1 / ab));
+  real sigma_b = sqrt(log(1 + 1 / ab));
+  real mu_g = log(ag / bg) - (0.5 * log(1 + 1 / ag));
+  real sigma_g = sqrt(log(1 + 1 / ag));
 }
 
 parameters {
