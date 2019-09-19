@@ -30,10 +30,10 @@ data {
 transformed data{
   real x_r[2] = rep_array(0.0, 2);
   int x_i[2] = rep_array(0, 2);
-  real mu_b = (3.0 / 2) * (log(ag / bg)) - log((1 / bg) + 1);
-  real sigma_b = sqrt(log(((1 / bb) + 1) * bb / ab));
-  real mu_g = (3.0 / 2) * (log(ab / bb)) - log((1 / bb) + 1);
-  real sigma_g = sqrt(log(((1 / bg) + 1) * bg / ag));
+  real mu_b = log(ab / bb) - (0.5 * log((1 + 1 / ab));
+  real sigma_b = sqrt(log((1 + 1 / ab));
+  real mu_g = log(ag / bg) - (0.5 * log((1 + 1 / ag));
+  real sigma_g = sqrt(log((1 + 1 / ag));
 }
 
 parameters {
@@ -67,4 +67,3 @@ generated quantities{
   real<lower=0> y_rep [n_obs];
   for (i in 1:n_obs) y_rep[i] = lognormal_rng(log(y_hat[i, 2]), sigma);
 }
-
