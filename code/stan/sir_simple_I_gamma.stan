@@ -20,10 +20,10 @@ data {
   real t0; // initial time
   real y_init; // initial measured population
   real y[n_obs]; // measured population at measurement times
-  real<lower=0> ab;
-  real<lower=0> bb;
-  real<lower=0> ag;
-  real<lower=0> bg;
+  real<lower=0> kb;
+  real<lower=0> thetab;
+  real<lower=0> kg;
+  real<lower=0> thetag;
   real<lower=0> as;
   real<lower=0> bs;
 }
@@ -52,8 +52,8 @@ transformed parameters {
   
 }
 model {
-  target += gamma_lpdf(beta | ab, bb);
-  target += gamma_lpdf(gamma | ag, bg);
+  target += gamma_lpdf(beta | kb, thetab);
+  target += gamma_lpdf(gamma | kg, thetag);
   target += beta_lpdf(S0 | as, bs);
   target += normal_lpdf(sigma | 0.5, 0.5);
   target += lognormal_lpdf(y  | log(y_hat[, 2]), sigma);
