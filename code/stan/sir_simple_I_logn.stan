@@ -20,20 +20,20 @@ data {
   real t0; // initial time
   real y_init; // initial measured population
   real y[n_obs]; // measured population at measurement times
-  real<lower=0> ab;
-  real<lower=0> bb;
-  real<lower=0> ag;
-  real<lower=0> bg;
+  real<lower=0> kb;
+  real<lower=0> thetab;
+  real<lower=0> kg;
+  real<lower=0> thetag;
   real<lower=0> as;
   real<lower=0> bs;
 }
 transformed data{
   real x_r[2] = rep_array(0.0, 2);
   int x_i[2] = rep_array(0, 2);
-  real mu_b = log(ab / bb) - (0.5 * log(1 + 1 / ab));
-  real sigma_b = sqrt(log(1 + 1 / ab));
-  real mu_g = log(ag / bg) - (0.5 * log(1 + 1 / ag));
-  real sigma_g = sqrt(log(1 + 1 / ag));
+  real mu_b = log(kb / thetab) - (0.5 * log(1 + 1 / kb));
+  real sigma_b = sqrt(log(1 + 1 / kb));
+  real mu_g = log(kg / thetag) - (0.5 * log(1 + 1 / kg));
+  real sigma_g = sqrt(log(1 + 1 / kg));
 }
 
 parameters {
@@ -47,11 +47,9 @@ transformed parameters {
   real<lower=0> R0 = beta/gamma;
   real y_hat[n_obs, 3]; // Output from the ODE solver
   real y0[3]; // Initial conditions for both S and I
-  
   y0[1] = S0;
   y0[2] = 1 - S0;
   y0[3] = 0;
-  
   y_hat = integrate_ode_rk45(SI, y0, t0, ts, {beta,gamma}, x_r, x_i);
   
 }

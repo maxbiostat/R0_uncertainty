@@ -209,8 +209,8 @@ Consider modelling [DISEASE] , where the transmission rate has a mean of [XX] an
 To construct the Gamma priors we picked $k_{\beta} = 2$, $\theta_{\beta} = 1/4000$, $k_{\gamma} = 40$ and $\theta_{\gamma} = 1/200$.
 For the log-normal priors we matched the first two moments of the Gamma priors, i.e., we set
 \begin{align*}
- \mu_{\beta} &= \ln \left( \frac{ k_{\beta} \theta_{\beta} }{\sqrt{1 + \frac{1}{k_{\beta}} }} \right) \:\text{and}\: \sigma_{\beta} = \ln \left( 1 +  \frac{ 1}{ k_{\beta}} \right), \\
- \mu_{\gamma} &= \ln \left( \frac{ k_{\gamma} \theta_{\gamma} }{\sqrt{1 + \frac{1}{k_{\gamma}} }} \right) \:\text{and}\: \sigma_{\gamma} =  \ln \left( 1 +  \frac{ 1}{ k_{\gamma}} \right).
+ \mu_{\beta} &= \ln \left( \frac{ k_{\beta} \theta_{\beta} }{\sqrt{1 + \frac{1}{k_{\beta}} }} \right) \:\text{and}\: \sigma_{\beta} = \sqrt{ \ln \left( 1 +  \frac{ 1}{ k_{\beta}} \right) }, \\
+ \mu_{\gamma} &= \ln \left( \frac{ k_{\gamma} \theta_{\gamma} }{\sqrt{1 + \frac{1}{k_{\gamma}} }} \right) \:\text{and}\: \sigma_{\gamma} = \sqrt{ \ln \left( 1 +  \frac{ 1}{ k_{\gamma}} \right) }.
 \end{align*}
 Figure~\ref{fig:informative_priors_example} shows the resulting densities, along with uninformative priors obtained by setting $k_{\beta} = k_{\gamma} =  1$ and $\theta_{\gamma} = \theta_{\beta} = 100$ -- log-normal priors again constructed via moment-matching.
 For these computations we used $N = 1000$.
