@@ -72,13 +72,37 @@ Our findings show that care is needed when constructing priors for inference of 
 \keywords{Epidemic models, basic reproductive number, prior modelling, Bayesian inference.}
 \end{abstract}
 
+\newpage
+\section*{IDEAS}
 \begin{itemize}
- \item Collect the models that give the gamma ratio for the $\rr$ ;
- \item select studies and data sets to evaluate;
- \item study moment-matching priors with better tail properties
- \item Question: does restricting the support of $f_{\rr}(r)$ to $[0, N]$ lead to improved inference?
+ \item Collect the models that give the gamma ratio for the $\rr$ (SIR, SI, SIS, SEIR);
+ \item Select studies and data sets to evaluate;
+ \item Study moment-matching priors with better tail properties;
+ \item Question: does restricting the support of $f_{\rr}(r)$ to $[0, N]$ lead to improved inference? (Do experiments)
  \item Derive $E[\rr]$, $\text{Var}(\rr)$, etc, with the support correction.
+ \item Calibrate priors to enforce $\operatorname{Pr}(R_0> 1) > 0.90$.
+ \item ODE stuff (computational):
+ \begin{itemize}
+  \item Log-transformation;
+  \item Single ODE for SIR (hierarchical SIR);
+ \end{itemize}
+
 \end{itemize}
+
+\section*{TODO/TASK}
+\begin{itemize}
+ \item Fit SIR to Eyam and boarding school under Gamma, log-normal and half-normal priors;
+ \item Compare log-parametrisation with regular parametrisation of the ODEs: runtime, number of gradient evaluations, ESS and Rhat;
+ \item Uncertainty analysis of key quantities.
+\end{itemize}
+
+\section*{Contributions}
+\begin{enumerate}
+ \item We show that poorly chosen priors on the rates lead to bad priors on key quantities: $I_{\max}$, $S(\infty)$ and, of course $R_0$;
+ \item We show how to calibrate priors to avoid this problem;
+ \item We explore re-parametrisations that lead to more stable computation and more efficient inference.
+\end{enumerate}
+
 
 \section{Epidemic models}
 
