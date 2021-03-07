@@ -80,7 +80,7 @@ Our findings show that care is needed when constructing priors for inference of 
  \item Study moment-matching priors with better tail properties;
  \item Question: does restricting the support of $f_{\rr}(r)$ to $[0, N]$ lead to improved inference? (Do experiments)
  \item Derive $E[\rr]$, $\text{Var}(\rr)$, etc, with the support correction.
- \item Calibrate priors to enforce $\operatorname{Pr}(R_0> 1) > 0.90$.
+ \item Calibrate priors to enforce $\operatorname{Pr}(\rr> 1) > 0.90$.
  \item ODE stuff (computational):
  \begin{itemize}
   \item Log-transformation;
@@ -98,7 +98,7 @@ Our findings show that care is needed when constructing priors for inference of 
 
 \section*{Contributions}
 \begin{enumerate}
- \item We show that poorly chosen priors on the rates lead to bad priors on key quantities: $I_{\max}$, $S(\infty)$ and, of course $R_0$;
+ \item We show that poorly chosen priors on the rates lead to bad priors on key quantities: $I_{\max}$, $S(\infty)$ and, of course $\rr$;
  \item We show how to calibrate priors to avoid this problem;
  \item We explore re-parametrisations that lead to more stable computation and more efficient inference.
 \end{enumerate}
@@ -224,6 +224,34 @@ h_{\rr}( r \mid \mu_{\beta}, \sigma_{\beta}, \mu_{\gamma}, \sigma_{\gamma}) =   
 i.e. a log-normal distribution with parameters $\mu_{\rr} = \ln N + \mu_{\beta} - \mu_{\gamma}$ and $\sigma_{\rr} = \sigma_{\beta}^2 + \sigma_{\gamma}^2$.
 Under the justification of employing a non-informative prior, researchers might be tempted to choose $\mu_{\beta} = \mu_{\gamma} = 0$ and $ \sigma_{\beta} = \sigma_{\gamma} = 100$, say -- see e.g.~\cite{Ho2018}, section 5.1.
 This apparently non-informative choice of hyperparameters leads to a prior on $\rr$ for which  $E[\rr ] = N + \exp(10^4)$ and $\text{Pr}(\rr > 100) = 0.49$, which are not reasonable.
+
+\paragraph{Half-normal priors}
+Another popular choice of priors for positive quantities is the half-normal (truncated at zero).
+Let 
+\begin{align*}
+\beta &\sim \operatorname{Normal}^{+}(\mu_\beta, \sigma_\beta),\\
+\gamma &\sim \operatorname{Normal}^{+}(\mu_\gamma, \sigma_\gamma), 
+\end{align*}
+and $\rr = \beta/\gamma$ i.e., taking $N = 1$ for simplicity.
+Then we have
+\begin{equation*}
+ f_{\rr}(r) = \int_0^\infty y \frac{\phi_\beta(ry)}{1-F_\beta(0)} \frac{\phi_\gamma(y)}{1-F_\gamma(0)}\,dy
+\end{equation*}
+where $F_i(x)$ is the cumulative distribution function for a Gaussian with parameters $\mu_i$ and $\sigma_i$.
+This can be computed by realising that $(ry-\mu_\beta)^2 = r^2(y-\mu_\beta/r)^2$, completing the square and using the fact that
+\begin{equation*}
+\int_0^\infty x\exp\left( -\frac{(x-m)^2}{2v} \right)\,dx = \dfrac{\sqrt{2}\Gamma\left(1,\frac{m^2}{2v}\right)v+\left(2\sqrt{{\pi}}-\Gamma\left(\frac{1}{2},\frac{m^2}{2v}\right)\right)m\sqrt{v}}{\sqrt{2}},
+\end{equation*}
+Hence, the density is 
+\begin{equation}
+\label{eq:r0_pdf_half_normals}
+f_{\rr}(r) = \exp\left(-\frac{(\mu_\beta/r -\mu_\gamma )^2}{2(\sigma_\beta^2/r^2 + \sigma_\gamma^2)}\right) \dfrac{\sqrt{2}\Gamma\left(1,\frac{m(r)^2}{2v(r)}\right)v(r)+\left(2\sqrt{{\pi}}-\Gamma\left(\frac{1}{2},\frac{m(r)^2}{2v(r)}\right)\right)m(r)\sqrt{v(r)}}{2\pi \sigma_\beta \sigma_\gamma \sqrt{2} [1-F_\beta(0)][1-F_\gamma(0)]},
+\end{equation}
+with 
+\begin{align*}
+m(r) &= \frac{\mu_\beta\sigma_\gamma^2 r + \mu_\gamma \sigma_\beta^2}{\sigma_\gamma^2 r^2 + \sigma_\beta^2},\\
+v(r) &=  \frac{\sigma_\beta^2\sigma_\gamma^2}{\sigma_\gamma^2 r^2 + \sigma_\beta^2}. 
+\end{align*}
 
 \paragraph{Informative priors on $\beta$ and $\gamma$}
 
