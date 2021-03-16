@@ -58,6 +58,6 @@ void main(){
     auto sim = model.run(0, tf);
     sw.stop();
     save("sir_stoch.csv",["S","I","R"],sim);
-    writeln("Time of the SIR run with N=1000000: ", sw.peek());
+    writefln("Time of the SIR run with N=%s: %s", N, sw.peek());
     writefln("Number of steps: %s", sim[0].length);
 }
