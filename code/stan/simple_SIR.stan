@@ -1,9 +1,9 @@
 functions {
-  real[] dr_dt(real t,
-               real[] r,
-               real[] theta,
-               real[] x_r,
-               int[] x_i) {    
+  vector dr_dt(real t,
+               matrix r,
+               vector theta,
+               vector x_r,
+               vector x_i) {    
     real beta = theta[1];
     real gamma = theta[2];
     real s0 = theta[3];
@@ -29,8 +29,8 @@ data {
   real<lower=0> br;
 }
 transformed data{
-  real xr[2] = rep_array(0.0, 2);
-  int xi[2] = rep_array(0, 2);
+  vector[2] xr = rep_array(0.0, 2);
+  vector[2] xi = rep_array(0, 2);
 }
 parameters {
   real<lower=0> beta;
@@ -39,8 +39,8 @@ parameters {
   real<lower=0> sigma;   // error scale
 }
 transformed parameters {
-    real theta[3];   // theta = { beta, gamma, s0 }
-    real  r[n_obs, 2];
+    vector[3] theta;   // theta = { beta, gamma, s0 }
+    matrix[n_obs, 2]  r;
     theta[1] = beta;
     theta[2] = gamma;
     theta[3] = s0;
