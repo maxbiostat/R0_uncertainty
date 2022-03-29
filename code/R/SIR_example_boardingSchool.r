@@ -26,66 +26,86 @@ plot(epi.data$ts, epi.data$y)
 
 #### Model fitting
 
-library(rstan)
-rstan_options(auto_write = TRUE)
+library(cmdstanr)
+# rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
-
-SIR_code <- stan_model(file = "stan/sir_simple_I(t).stan")
+check_cmdstan_toolchain(fix = TRUE, quiet = TRUE)
+file <- file.path("stan", "sir_simple_I(t).stan")
+SIR_code <- cmdstan_model(file)
+# SIR_code <- stan_model(file = "stan/sir_simple_I(t).stan")
 
 ### Varying alpha
-SIR.map.s1 <- optimizing(SIR_code, data = epi.data, hessian = TRUE, verbose = TRUE)
-SIR.posterior.s1 <- sampling(SIR_code, data = epi.data, chains = 4, control = list(adapt_delta = .99))
-check_hmc_diagnostics(SIR.posterior.s1)
-print(SIR.posterior.s1, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-pairs(SIR.posterior.s1, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-stan_trace(SIR.posterior.s1, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-simulated_trajectories.s1 <- extract(SIR.posterior.s1, 'y_rep')$y_rep
-predicted.s1 <- data.frame(
-  time = epi.data$ts,
-  lower = apply(simulated_trajectories.s1, 2, function(x) as.numeric(quantile(x, probs = .025))),
-  post_mean = colMeans(simulated_trajectories.s1),
-  upper = apply(simulated_trajectories.s1, 2, function(x) as.numeric(quantile(x, probs = .975))),
-  s = "1"
-)
+
+# SIR.map.s1 <- optimize(SIR_code, data = epi.data, hessian = TRUE, verbose = TRUE)
+SIR.map.s1 <- SIR_code$optimize(data = epi.data, seed = 123)
+# SIR.posterior.s1 <- sampling(SIR_code, data = epi.data, chains = 4, control = list(adapt_delta = .99))
+fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123, chains = 4, parallel_chains = 4)
+# check_hmc_diagnostics(SIR.posterior.s1)
+SIR.posterior.s1 <- fit_mcmc
+SIR.posterior.s1$cmdstan_diagnose()
+SIR.posterior.s1$cmdstan_summary()
+
+library("bayesplot")
+print(SIR.posterior.s1$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+# pairs(SIR.posterior.s1$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+mcmc_pairs(SIR.posterior.s1$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+# stan_trace(SIR.posterior.s1, pars = c("beta", "gamma", "S0", "R0", "sigma"))
+p <- mcmc_trace(SIR.posterior.s1$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+p + facet_text(size = 15)
+# simulated_trajectories.s1 <- extract(SIR.posterior.s1, 'y_rep')$y_rep
+simulated_trajectories.s1 <- SIR.posterior.s1$draws('y_rep', format = "df")[,c(1:14)]
+predicted.s1 <- data.frame(time = epi.data$ts,
+                           lower = apply(simulated_trajectories.s1, 
+                           2, function(x) as.numeric(quantile(x, probs = .025)))[1:14],
+                           post_mean = colMeans(simulated_trajectories.s1),
+                           upper = apply(simulated_trajectories.s1, 
+                           2, function(x) as.numeric(quantile(x, probs = .975)))[1:14],
+                           s = "1")
 
 ### sigma_beta = sigma_gamma = 10
 epi.data$sigma_beta <- 10
 epi.data$sigma_gamma <- 10
-SIR.map.s10 <- optimizing(SIR_code, data = epi.data, hessian = TRUE, verbose = TRUE)
-SIR.posterior.s10 <- sampling(SIR_code, data = epi.data, chains = 4, control = list(adapt_delta = .99))
-check_hmc_diagnostics(SIR.posterior.s10)
-print(SIR.posterior.s10, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-pairs(SIR.posterior.s10, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-stan_trace(SIR.posterior.s10, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-
-simulated_trajectories.s10 <- extract(SIR.posterior.s10, 'y_rep')$y_rep
-predicted.s10 <- data.frame(
-  time = epi.data$ts,
-  lower = apply(simulated_trajectories.s10, 2, function(x) as.numeric(quantile(x, probs = .025))),
-  post_mean = colMeans(simulated_trajectories.s10),
-  upper = apply(simulated_trajectories.s10, 2, function(x) as.numeric(quantile(x, probs = .975))),
-  s = "10"
-)
+SIR.map.s10 <- SIR_code$optimize(data = epi.data, seed = 123)
+fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123, chains = 4, parallel_chains = 4)
+SIR.posterior.s10 <- fit_mcmc
+SIR.posterior.s10$cmdstan_diagnose()
+SIR.posterior.s10$cmdstan_summary()
+print(SIR.posterior.s10$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+mcmc_pairs(SIR.posterior.s10$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+p <- mcmc_trace(SIR.posterior.s10$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+p + facet_text(size = 15)
+simulated_trajectories.s10 <- SIR.posterior.s10$draws('y_rep', format = "df")[,c(1:14)]
+dim(simulated_trajectories.s10)
+predicted.s10 <- data.frame(time = epi.data$ts,
+                           lower = apply(simulated_trajectories.s10, 
+                                         2, function(x) as.numeric(quantile(x, probs = .025)))[1:14],
+                           post_mean = colMeans(simulated_trajectories.s10),
+                           upper = apply(simulated_trajectories.s10, 
+                                         2, function(x) as.numeric(quantile(x, probs = .975)))[1:14],
+                           s = "10")
 
 ### sigma_beta = sigma_gamma = 100
 epi.data$sigma_beta <- 100
 epi.data$sigma_gamma <- 100
-SIR.map.s100 <- optimizing(SIR_code, data = epi.data, hessian = TRUE, verbose = TRUE)
-SIR.posterior.s100 <- sampling(SIR_code, data = epi.data, chains = 4, 
-                               control = list(adapt_delta = .99))
-check_hmc_diagnostics(SIR.posterior.s100)
-print(SIR.posterior.s100, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-pairs(SIR.posterior.s100, pars = c("beta", "gamma", "S0", "R0", "sigma"))
-stan_trace(SIR.posterior.s100, pars = c("beta", "gamma", "S0", "R0", "sigma"))
 
-simulated_trajectories.s100 <- extract(SIR.posterior.s100, 'y_rep')$y_rep
-predicted.s100 <- data.frame(
-  time = epi.data$ts,
-  lower = apply(simulated_trajectories.s100, 2, function(x) as.numeric(quantile(x, probs = .025))),
-  post_mean = colMeans(simulated_trajectories.s100),
-  upper = apply(simulated_trajectories.s100, 2, function(x) as.numeric(quantile(x, probs = .975))),
-  s = "100"
-)
+SIR.map.s100 <- SIR_code$optimize(data = epi.data, seed = 123)
+fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123, chains = 4, parallel_chains = 4)
+SIR.posterior.s100 <- fit_mcmc
+SIR.posterior.s100$cmdstan_diagnose()
+SIR.posterior.s100$cmdstan_summary()
+print(SIR.posterior.s100$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+mcmc_pairs(SIR.posterior.s100$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+p <- mcmc_trace(SIR.posterior.s100$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+p + facet_text(size = 15)
+simulated_trajectories.s100 <- SIR.posterior.s100$draws('y_rep', format = "df")[,c(1:14)]
+dim(simulated_trajectories.s100)
+predicted.s100 <- data.frame(time = epi.data$ts,
+                            lower = apply(simulated_trajectories.s100, 
+                                          2, function(x) as.numeric(quantile(x, probs = .025)))[1:14],
+                            post_mean = colMeans(simulated_trajectories.s100),
+                            upper = apply(simulated_trajectories.s100, 
+                                          2, function(x) as.numeric(quantile(x, probs = .975)))[1:14],
+                            s = "100")
 
 #### Plotting and annotating
 
@@ -103,11 +123,13 @@ predictions_SIR <- ggplot(data = prediction.bands.SIR, aes(x = time, y = post_me
 
 predictions_SIR
 
-R0.s1 <- data.frame(R0 = extract(SIR.posterior.s1, 'R0')$R0, s = "1") 
-R0.s10 <- data.frame(R0 = extract(SIR.posterior.s10, 'R0')$R0, s = "10")
-R0.s100 <- data.frame(R0 = extract(SIR.posterior.s100, 'R0')$R0, s = "100")
+# R0.s1 <- data.frame(R0 = extract(SIR.posterior.s1, 'R0')$R0, s = "1")
+R0.s1 <- data.frame(R0 = SIR.posterior.s1$draws('R0', format = "df"), s="1")
+R0.s10 <- data.frame(R0 = SIR.posterior.s10$draws('R0', format = "df"), s="10")
+R0.s100 <- data.frame(R0 = SIR.posterior.s100$draws('R0', format = "df"), s="100")
 
 R0.posteriors <- do.call(rbind, list(R0.s1, R0.s10, R0.s100))
+R0.posteriors <- R0.posteriors[,c(1:3)]
 
 R0_posterior <- ggplot(data = subset(R0.posteriors, s != "100"), aes(x = R0, colour = s, fill = s)) +
   geom_density(alpha = .4) +
