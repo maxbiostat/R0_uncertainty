@@ -122,11 +122,10 @@ predictions_SIR <- ggplot(data = prediction.bands.SIR, aes(x = time, y = post_me
   theme_bw(base_size = 16)
 
 predictions_SIR
-
 # R0.s1 <- data.frame(R0 = extract(SIR.posterior.s1, 'R0')$R0, s = "1")
-R0.s1 <- data.frame(R0 = SIR.posterior.s1$draws('R0', format = "df"), s="1")
-R0.s10 <- data.frame(R0 = SIR.posterior.s10$draws('R0', format = "df"), s="10")
-R0.s100 <- data.frame(R0 = SIR.posterior.s100$draws('R0', format = "df"), s="100")
+R0.s1 <- data.frame(R0 = SIR.posterior.s1$draws('R0', format = "df")[1], s="1")
+R0.s10 <- data.frame(R0 = SIR.posterior.s10$draws('R0', format = "df")[1], s="10")
+R0.s100 <- data.frame(R0 = SIR.posterior.s100$draws('R0', format = "df")[1], s="100")
 
 R0.posteriors <- do.call(rbind, list(R0.s1, R0.s10, R0.s100))
 R0.posteriors <- R0.posteriors[,c(1:3)]
