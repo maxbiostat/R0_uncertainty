@@ -29,7 +29,7 @@ plot(epi.data$ts, epi.data$y)
 library(cmdstanr)
 options(mc.cores = parallel::detectCores())
 check_cmdstan_toolchain(fix = TRUE, quiet = TRUE)
-file <- file.path("../stan", "sir_simple_I(t).stan")
+file <- file.path("../stan", "sir_simple_I.stan")
 SIR_code <- cmdstan_model(file)
 
 SIR.map.s1 <- SIR_code$optimize(data = epi.data, seed = 123)

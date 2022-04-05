@@ -25,7 +25,7 @@ plot(epi.data$ts, epi.data$y)
 library(cmdstanr)
 options(mc.cores = parallel::detectCores())
 check_cmdstan_toolchain(fix = TRUE, quiet = TRUE)
-file <- file.path("../stan", "sir_simple_I(t)_uniform_log.stan")
+file <- file.path("../stan", "sir_simple_I_uniform_log.stan")
 SIR_code <- cmdstan_model(file)
 
 SIR.map <- SIR_code$optimize(data = epi.data, seed = 123)
