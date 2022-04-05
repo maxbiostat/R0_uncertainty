@@ -1,4 +1,11 @@
 library(outbreaks)
+library(bayesplot)
+library(cmdstanr)
+library(rstan)
+stanfit <- function(fit) rstan::read_stan_csv(fit$output_files())
+
+########## Data loading and prep
+
 data(influenza_england_1978_school)
 Ndata <- 763
 sol <- influenza_england_1978_school
@@ -22,28 +29,34 @@ epi.data <- list(
   as = 9, #254,
   bs = 1#350-254
 )
-plot(epi.data$ts, epi.data$y)
 
-#### Model fitting
+########## Model fitting
 
-library(cmdstanr)
 options(mc.cores = parallel::detectCores())
 check_cmdstan_toolchain(fix = TRUE, quiet = TRUE)
 file <- file.path("../stan", "sir_simple_I.stan")
 SIR_code <- cmdstan_model(file)
 
+pars.interest <- c("beta", "gamma", "S0", "R0", "sigma")
+
 SIR.map.s1 <- SIR_code$optimize(data = epi.data, seed = 123)
-fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123, chains = 4, parallel_chains = 4)
+
+fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123,
+                            chains = 4, parallel_chains = 4,
+                            refresh = 0)
+
 SIR.posterior.s1 <- fit_mcmc
 SIR.posterior.s1$cmdstan_diagnose()
 SIR.posterior.s1$cmdstan_summary()
 
-library("bayesplot")
-print(SIR.posterior.s1$draws(c("beta", "gamma", "S0", "R0", "sigma")))
-mcmc_pairs(SIR.posterior.s1$draws(c("beta", "gamma", "S0", "R0", "sigma")))
-p <- mcmc_trace(SIR.posterior.s1$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+print(stanfit(SIR.posterior.s1), pars = pars.interest)
+
+mcmc_pairs(SIR.posterior.s1$draws(pars.interest))
+
+p <- mcmc_trace(SIR.posterior.s1$draws(pars.interest))
 p + facet_text(size = 15)
-simulated_trajectories.s1 <- SIR.posterior.s1$draws('y_rep', format = "df")[,c(1:14)]
+
+simulated_trajectories.s1 <- SIR.posterior.s1$draws('y_rep', format = "df")[, c(1:14)]
 predicted.s1 <- data.frame(time = epi.data$ts,
                            lower = apply(simulated_trajectories.s1, 
                            2, function(x) as.numeric(quantile(x, probs = .025)))[1:14],
@@ -56,17 +69,26 @@ predicted.s1 <- data.frame(time = epi.data$ts,
 ### sigma_beta = sigma_gamma = 10
 epi.data$sigma_beta <- 10
 epi.data$sigma_gamma <- 10
+
 SIR.map.s10 <- SIR_code$optimize(data = epi.data, seed = 123)
-fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123, chains = 4, parallel_chains = 4)
+
+fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123,
+                            chains = 4, parallel_chains = 4,
+                            refresh = 0)
+
 SIR.posterior.s10 <- fit_mcmc
 SIR.posterior.s10$cmdstan_diagnose()
 SIR.posterior.s10$cmdstan_summary()
-print(SIR.posterior.s10$draws(c("beta", "gamma", "S0", "R0", "sigma")))
-mcmc_pairs(SIR.posterior.s10$draws(c("beta", "gamma", "S0", "R0", "sigma")))
-p <- mcmc_trace(SIR.posterior.s10$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+
+print(stanfit(SIR.posterior.s10), pars = pars.interest)
+
+mcmc_pairs(SIR.posterior.s10$draws(pars.interest))
+
+p <- mcmc_trace(SIR.posterior.s10$draws(pars.interest))
 p + facet_text(size = 15)
-simulated_trajectories.s10 <- SIR.posterior.s10$draws('y_rep', format = "df")[,c(1:14)]
-dim(simulated_trajectories.s10)
+
+simulated_trajectories.s10 <- SIR.posterior.s10$draws('y_rep', format = "df")[, c(1:14)]
+
 predicted.s10 <- data.frame(time = epi.data$ts,
                            lower = apply(simulated_trajectories.s10, 
                                          2, function(x) as.numeric(quantile(x, probs = .025)))[1:14],
@@ -81,16 +103,22 @@ epi.data$sigma_beta <- 100
 epi.data$sigma_gamma <- 100
 
 SIR.map.s100 <- SIR_code$optimize(data = epi.data, seed = 123)
-fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123, chains = 4, parallel_chains = 4)
+fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123,
+                            chains = 4, parallel_chains = 4,
+                            refresh = 0)
+
 SIR.posterior.s100 <- fit_mcmc
 SIR.posterior.s100$cmdstan_diagnose()
 SIR.posterior.s100$cmdstan_summary()
-print(SIR.posterior.s100$draws(c("beta", "gamma", "S0", "R0", "sigma")))
-mcmc_pairs(SIR.posterior.s100$draws(c("beta", "gamma", "S0", "R0", "sigma")))
-p <- mcmc_trace(SIR.posterior.s100$draws(c("beta", "gamma", "S0", "R0", "sigma")))
+
+print(stanfit(SIR.posterior.s100), pars = pars.interest)
+
+mcmc_pairs(SIR.posterior.s100$draws())
+
+p <- mcmc_trace(SIR.posterior.s100$draws(pars.interest))
 p + facet_text(size = 15)
-simulated_trajectories.s100 <- SIR.posterior.s100$draws('y_rep', format = "df")[,c(1:14)]
-dim(simulated_trajectories.s100)
+
+simulated_trajectories.s100 <- SIR.posterior.s100$draws('y_rep', format = "df")[, c(1:14)]
 predicted.s100 <- data.frame(time = epi.data$ts,
                             lower = apply(simulated_trajectories.s100, 
                                           2, function(x) as.numeric(quantile(x, probs = .025)))[1:14],
@@ -166,4 +194,5 @@ R0_posterior <- ggplot(data = R0.posteriors,
                      limits = c(0, 10)) + 
   scale_y_continuous("Density", expand = c(0, 0)) + 
   theme_bw(base_size = 16)
+
 R0_posterior
