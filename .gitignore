@@ -130,3 +130,5 @@ sympy-plots-for-*.tex/
 
 # Stan stuff
 *.rds
+# R stuff
+*.Rhistory
