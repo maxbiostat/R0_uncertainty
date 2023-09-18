@@ -165,9 +165,12 @@ predictions_SIR_median <- ggplot(data = prediction.bands.SIR,
 
 predictions_SIR_median
 
-R0.s1 <- data.frame(R0 = SIR.posterior.s1$draws('R0', format = "df"), s="1")
-R0.s10 <- data.frame(R0 = SIR.posterior.s10$draws('R0', format = "df"), s="10")
-R0.s100 <- data.frame(R0 = SIR.posterior.s100$draws('R0', format = "df"), s="100")
+R0.s1 <- data.frame(R0 = SIR.posterior.s1$draws('R0', format = "df"),
+                    s="1")
+R0.s10 <- data.frame(R0 = SIR.posterior.s10$draws('R0', format = "df"),
+                     s="10")
+R0.s100 <- data.frame(R0 = SIR.posterior.s100$draws('R0', format = "df"),
+                      s="100")
 
 R0.posteriors <- do.call(rbind, list(R0.s1, R0.s10, R0.s100))
 R0.posteriors <- R0.posteriors[, c(1:5)]

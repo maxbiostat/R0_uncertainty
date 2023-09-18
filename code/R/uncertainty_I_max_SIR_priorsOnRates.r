@@ -33,7 +33,7 @@ betab <- mb/vb
 
 alphag <- mg^2/vg
 betag <- mg/vg
-qgamma(p = c(.025, .975), shape = alpha, rate = beta)
+qgamma(p = c(.025, .975), shape = alphag, rate = betag)
 
 # Log-normal
 mub <- LogMean(realMean = mb, realSD = sqrt(vb) )
@@ -76,6 +76,11 @@ gamma.samples.L <- rlnorm(n = M, meanlog = mug, sdlog = sigmag)
 
 R0.samples.L <- beta.samples.L/gamma.samples.L
 
+beta.samples.H <- abs(rnorm(n = M, mean = mb, sd = sqrt(vb)))
+gamma.samples.H <- abs(rnorm(n = M, mean = mg, sd = sqrt(vg)))
+
+R0.samples.H <- beta.samples.H/gamma.samples.H
+
 N <- 1
 I0a <- 1E-7
 I0b <- 1E-6
@@ -83,17 +88,21 @@ I0c <- 1E-5
 
 Imax.samples.I0a.G <- exact_I_max(R_0 = R0.samples.G, I0 = I0a, S0 = N-I0a)
 Imax.samples.I0a.L <-  exact_I_max(R_0 = R0.samples.L, I0 = I0a, S0 = N-I0a)
+Imax.samples.I0a.H <-  exact_I_max(R_0 = R0.samples.H, I0 = I0a, S0 = N-I0a)
 
 Imax.samples.I0b.G <- exact_I_max(R_0 = R0.samples.G, I0 = I0b, S0 = N-I0b)
 Imax.samples.I0b.L <-  exact_I_max(R_0 = R0.samples.L, I0 = I0b, S0 = N-I0b)
+Imax.samples.I0b.H <-  exact_I_max(R_0 = R0.samples.H, I0 = I0b, S0 = N-I0b)
 
 Imax.samples.I0c.G <- exact_I_max(R_0 = R0.samples.G, I0 = I0c, S0 = N-I0c)
 Imax.samples.I0c.L <-  exact_I_max(R_0 = R0.samples.L, I0 = I0c, S0 = N-I0c)
+Imax.samples.I0c.H <-  exact_I_max(R_0 = R0.samples.H, I0 = I0c, S0 = N-I0c)
 
 Imax.dt <- data.frame(
   Imax = c(Imax.samples.I0a.G, Imax.samples.I0b.G, Imax.samples.I0c.G,
-           Imax.samples.I0a.L, Imax.samples.I0b.L, Imax.samples.I0c.L),
-  prior = rep(c("Gamma", "Lognormal"), each = 3*M),
+           Imax.samples.I0a.L, Imax.samples.I0b.L, Imax.samples.I0c.L,
+           Imax.samples.I0a.H, Imax.samples.I0b.H, Imax.samples.I0c.H),
+  prior = rep(c("Gamma", "Lognormal", "Halfnormal"), each = 3*M),
   I0 = rep(c(I0a, I0b, I0c), each = M)
 )
 Imax.dt$I0 <- as.factor(Imax.dt$I0)
@@ -109,7 +118,8 @@ library(ggplot2)
 #   theme_bw(base_size = 16)
 # p0
 
-p0 <- ggplot(data = Imax.dt, aes(x = Imax, col = prior, fill = prior)) + 
+p0 <- ggplot(data = Imax.dt,
+             aes(x = Imax, col = prior, fill = prior)) + 
   geom_density(alpha = .2)+
   scale_x_continuous(expression(I[max]), expand = c(0, 0), limit = c(0, 1)) + 
   scale_y_continuous("Density", expand = c(0, 0)) + 
@@ -117,6 +127,14 @@ p0 <- ggplot(data = Imax.dt, aes(x = Imax, col = prior, fill = prior)) +
   facet_wrap(I0~.) + 
   theme_bw(base_size = 16)
 p0
+
+ggsave(plot = p0,
+       filename = "../../figures/Imax_boarding_GammaLNHN.pdf",
+       scale = 1,
+       width = 297,
+       height = 210,
+       units = "mm",
+       dpi = 300)
 
 # p1 <- ggplot(data = Imax.dt, aes(x = Imax, col = I0, fill = I0)) + 
 #   geom_density(alpha = .2)+

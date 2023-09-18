@@ -46,13 +46,33 @@ pars.interest <- c("beta", "gamma", "S0", "R0", "sigma")
 
 SIR.map <- SIR_code$optimize(data = epi.data, seed = 123)
 
-fit_mcmc <- SIR_code$sample(data = epi.data, seed = 123,
-                            chains = 4, parallel_chains = 4,
+fit_mcmc <- SIR_code$sample(data = epi.data,
+                            seed = 666,
+                            iter_warmup = 1500,
+                            iter_sampling = 500,
+                            chains = 100, parallel_chains = 4,
                             refresh = 0)
+
+write.csv(fit_mcmc$time()$chains, 
+          file = "../../data/saved_data/runtimes_real_SIR_bschool.csv",
+          row.names = FALSE)
 
 SIR.posterior <- fit_mcmc
 SIR.posterior$cmdstan_diagnose()
 SIR.posterior$cmdstan_summary()
+
+draws.real <- lapply(pars.interest, function(par) {
+  raw <- posterior::extract_variable_matrix(SIR.posterior, par)
+  all.ess <- apply(raw, 2, posterior::ess_basic)
+  out <- data.frame(ess = all.ess, parameter = par)
+  out$chain <- paste0("chain_", 1:nrow(out))
+  return(out)
+})
+draws.real.dt <- do.call(rbind, draws.real)
+
+write.csv(draws.real.dt, 
+          file = "../../data/saved_data/ESS_real_SIR_bschool.csv",
+          row.names = FALSE)
 
 print(stanfit(SIR.posterior), pars = pars.interest)
 
@@ -76,12 +96,30 @@ predicted <- data.frame(time = epi.data$ts,
 SIR_log.map <- SIR_log_code$optimize(data = epi.data, seed = 123)
 
 fit_mcmc_log <- SIR_log_code$sample(data = epi.data, seed = 123,
-                            chains = 4, parallel_chains = 4,
+                                    
+                            chains = 100, parallel_chains = 4,
                             refresh = 0)
+
+write.csv(fit_mcmc_log$time()$chains, 
+          file = "../../data/saved_data/runtimes_log_SIR_bschool.csv",
+          row.names = FALSE)
 
 SIR_log.posterior <- fit_mcmc_log
 SIR_log.posterior$cmdstan_diagnose()
 SIR_log.posterior$cmdstan_summary()
+
+draws.log <- lapply(pars.interest, function(par) {
+  raw <- posterior::extract_variable_matrix(SIR_log.posterior, par)
+  all.ess <- apply(raw, 2, posterior::ess_basic)
+  out <- data.frame(ess = all.ess, parameter = par)
+  out$chain <- paste0("chain_", 1:nrow(out))
+  return(out)
+})
+draws.log.dt <- do.call(rbind, draws.log)
+
+write.csv(draws.log.dt, 
+          file = "../../data/saved_data/ESS_log_SIR_bschool.csv",
+          row.names = FALSE)
 
 print(stanfit(SIR_log.posterior), pars = pars.interest)
 

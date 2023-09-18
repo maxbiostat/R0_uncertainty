@@ -33,53 +33,97 @@ f_hn_ratio <- function(z, m1, v1, m2, v2){ ## exact density
 }
 f_hn_ratio <- Vectorize(f_hn_ratio)
 
-devtools::source_url("https://raw.githubusercontent.com/maxbiostat/R0_uncertainty/master/code/gamma_ratio.R")
+devtools::source_url("https://raw.githubusercontent.com/maxbiostat/R0_uncertainty/master/code/R/gamma_ratio.R")
+
+make_plot <- function(mb, vb, mg, vg){
+  # Gammas
+  alphab <- mb^2/vb
+  betab <- mb/vb
+  
+  alphag <- mg^2/vg
+  betag <- mg/vg
+  
+  # Log-normals
+  mub <- LogMean(realMean = mb, realSD = sqrt(vb) )
+  sigmab <- sqrt( LogVar(realMean = mb, realSD = sqrt(vb) ))
+  
+  mug <- LogMean(realMean = mg, realSD = sqrt(vg) )
+  sigmag <- sqrt( LogVar(realMean = mg, realSD = sqrt(vg) ))
+  
+  ####
+  f1 <- function(x) dgamma.ratio(x = x, k1 = alphab, k2 = alphag, t1 = betab,
+                                 t2 = betag, N = 1); f1 <- Vectorize(f1)
+  f2 <- function(x) f_hn_ratio(z = x, m1 = mb, v1 = vb, m2 = mg, v2 = vg); f2 <- Vectorize(f2)
+  f3 <- function(x) dlnorm(x = x, meanlog = mub-mug, sd = sqrt(sigmab^2 + sigmag^2)); f3 <- Vectorize(f3)
+  
+  
+  PrLessThan1.gamma <- integrate(function(x) f1(x), 0, 1)$value
+  PrLessThan1.halfnormal <- integrate(function(x) f2(x), 0, 1)$value
+  PrLessThan1.lognormal <- integrate(function(x) f3(x), 0, 1)$value
+  
+  PrLessThan10.gamma <- integrate(function(x) f1(x), 0, 10)$value
+  PrLessThan10.halfnormal <- integrate(function(x) f2(x), 0, 10)$value
+  PrLessThan10.lognormal <- integrate(function(x) f3(x), 0, 10)$value
+  
+  PrLessThan100.gamma <- integrate(function(x) f1(x), 0, 100)$value
+  PrLessThan100.halfnormal <- integrate(function(x) f2(x), 0, 100)$value
+  PrLessThan100.lognormal <- integrate(function(x) f3(x), 0, 100)$value
+  
+  curve(f1, mR, MR, lwd = 4, col = 1, xlab = expression(R[0]),
+        ylab = "Density", ylim = c(0, .2))
+  curve(f2, mR, MR, lwd = 4, col = 2, lty = 2, add = TRUE)
+  curve(f3, mR, MR, lwd = 4, col = 3, lty = 3, add = TRUE)
+  legend(x = "topright",
+         legend = c("Gammas", "Half-normals", "Log-normals"),
+         col = 1:3,
+         lty = 1:3,
+         lwd = 2,
+         bty = 'n')
+}
 ###############
-mb <- 2
-vb <- 1^2
-mg <- 0.4
-vg <- 0.5^2
-
-# Gammas
-alphab <- mb^2/vb
-betab <- mb/vb
-
-alphag <- mg^2/vg
-betag <- mg/vg
-
-# Log-normals
-mub <- LogMean(realMean = mb, realSD = sqrt(vb) )
-sigmab <- sqrt( LogVar(realMean = mb, realSD = sqrt(vb) ))
-
-mug <- LogMean(realMean = mg, realSD = sqrt(vg) )
-sigmag <- sqrt( LogVar(realMean = mg, realSD = sqrt(vg) ))
-
-####
-f1 <- function(x) dgamma.ratio(x = x, k1 = alphab, k2 = alphag, t1 = betab, t2 = betag, N = 1); f1 <- Vectorize(f1)
-f2 <- function(x) f_hn_ratio(z = x, m1 = mb, v1 = vb, m2 = mg, v2 = vg); f2 <- Vectorize(f2)
-f3 <- function(x) dlnorm(x = x, meanlog = mub-mug, sd = sqrt(sigmab^2 + sigmag^2)); f3 <- Vectorize(f3)
-
-
-PrLessThan1.gamma <- integrate(function(x) f1(x), 0, 1)$value
-PrLessThan1.halfnormal <- integrate(function(x) f2(x), 0, 1)$value
-PrLessThan1.lognormal <- integrate(function(x) f3(x), 0, 1)$value
-
-PrLessThan10.gamma <- integrate(function(x) f1(x), 0, 10)$value
-PrLessThan10.halfnormal <- integrate(function(x) f2(x), 0, 10)$value
-PrLessThan10.lognormal <- integrate(function(x) f3(x), 0, 10)$value
-
-PrLessThan100.gamma <- integrate(function(x) f1(x), 0, 100)$value
-PrLessThan100.halfnormal <- integrate(function(x) f2(x), 0, 100)$value
-PrLessThan100.lognormal <- integrate(function(x) f3(x), 0, 100)$value
+hpars.info <- c(2, 1^2, 0.4, 0.5^2) ## 'informative'
+hpars.ninfo <- c(1, 1^2, 1, 1^2) ## 'noninformative'
 
 mR <- 0
 MR <- 10
-curve(f1, mR, MR, lwd = 4, col = 1, xlab = expression(R[0]), ylab = "Density", ylim = c(0, .2))
-curve(f2, mR, MR, lwd = 4, col = 2, lty = 2, add = TRUE)
-curve(f3, mR, MR, lwd = 4, col = 3, lty = 3, add = TRUE)
-legend(x = "topright",
-       legend = c("Gammas", "Half-normals", "Log-normals"),
-       col = 1:3,
-       lty = 1:3,
-       lwd = 2,
-       bty = 'n')
+
+informative <- ggplotify::as.grob(~make_plot(mb = hpars.info[1], ## mean of the transmission rate (beta),
+                                             vb =  hpars.info[2], ##  variance of beta,
+                                             mg  = hpars.info[3], ## mean of the removal rate (gamma),
+                                             vg = hpars.info[4] ## variance of gamma
+)) 
+non_informative <- ggplotify::as.grob(~make_plot(mb = hpars.ninfo[1], 
+                                                 vb =  hpars.ninfo[2], 
+                                                 mg  = hpars.ninfo[3], 
+                                                 vg = hpars.ninfo[4]
+)) 
+
+induced_prior <- cowplot::plot_grid(ggplotify::as.ggplot(informative),
+                                         ggplotify::as.ggplot(non_informative),
+                                         ncol = 2,
+                                         labels = c("Noninformative",
+                                                    "Informative"))
+
+ggsave(plot = induced_prior,
+       filename = "../../figures/induced_prior_R0.pdf",
+       scale = 1,
+       width = 297,
+       height = 210,
+       units = "mm",
+       dpi = 300)
+
+ggsave(plot = ggplotify::as.ggplot(non_informative),
+       filename = "../../figures/induced_prior_R0_noninformative.pdf",
+       scale = 1,
+       width = 297,
+       height = 210,
+       units = "mm",
+       dpi = 300)
+
+ggsave(plot = ggplotify::as.ggplot(informative),
+       filename = "../../figures/induced_prior_R0_informative.pdf",
+       scale = 1,
+       width = 297,
+       height = 210,
+       units = "mm",
+       dpi = 300)
