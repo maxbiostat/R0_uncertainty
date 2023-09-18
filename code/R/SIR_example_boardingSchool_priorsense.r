@@ -50,7 +50,6 @@ SIR.posterior.s1$cmdstan_diagnose()
 SIR.posterior.s1$cmdstan_summary()
 fit.s1 <- stanfit(SIR.posterior.s1)
 
-
 print(fit.s1, pars = pars.interest)
 
 psa.s1 <- powerscale_sensitivity(fit.s1)
